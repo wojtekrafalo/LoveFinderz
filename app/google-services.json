@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "187574739195",
+    "firebase_url": "https://lovefinderz-879c4.firebaseio.com",
+    "project_id": "lovefinderz-879c4",
+    "storage_bucket": "lovefinderz-879c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187574739195:android:f7048d7a177b1ea8e6505e",
+        "android_client_info": {
+          "package_name": "com.example.lovefinderz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "187574739195-h5aelav21gcnul3l69vs95pb69ilss4b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZXmW2EbCfRB_CTjjZWTeNniDL8Z569JY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "187574739195-h5aelav21gcnul3l69vs95pb69ilss4b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
