@@ -3,18 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/WelcomeFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.example.lovefinderz.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        android:id="@+id/WelcomeFragment"
+        android:name="com.example.lovefinderz.WelcomeFragment"
+        android:label="@string/welcome_fragment_label"
+        tools:layout="@layout/fragment_welcome">
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
+
+        <action
+            android:id="@+id/action_WelcomeFirstFragment_to_SignInFragment"
+            app:destination="@id/SignInFragment" />
+
+        <action
+            android:id="@+id/action_WelcomeFirstFragment_to_SignUpFragment"
+            app:destination="@id/SignUpFragment" />
     </fragment>
+
+
     <fragment
         android:id="@+id/SecondFragment"
         android:name="com.example.lovefinderz.SecondFragment"
@@ -23,6 +33,54 @@
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            app:destination="@id/WelcomeFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/SignInFragment"
+        android:name="com.example.lovefinderz.SignInFragment"
+        android:label="@string/sign_in"
+        tools:layout="@layout/fragment_sign_in">
+
+        <action
+            android:id="@+id/action_SignInFragment_to_ProfileFragment"
+            app:destination="@id/ProfileFragment" />
+
+        <action
+            android:id="@+id/action_SignInFragment_to_WelcomeFragment"
+            app:destination="@id/WelcomeFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/SignUpFragment"
+        android:name="com.example.lovefinderz.SignUpFragment"
+        android:label="@string/sign_up"
+        tools:layout="@layout/fragment_sign_up">
+
+        <action
+            android:id="@+id/action_SignUpFragment_to_ProfileFragment"
+            app:destination="@id/ProfileFragment" />
+
+        <action
+            android:id="@+id/action_SignUpFragment_to_WelcomeFragment"
+            app:destination="@id/WelcomeFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/ProfileFragment"
+        android:name="com.example.lovefinderz.ProfileFragment"
+        android:label="@string/profile"
+        tools:layout="@layout/fragment_profile">
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/ProfileBrowserFragment"
+        android:name="com.example.lovefinderz.ProfileBrowserFragment"
+        android:label="@string/profile_browser"
+        tools:layout="@layout/fragment_profile_browser">
     </fragment>
 </navigation>
