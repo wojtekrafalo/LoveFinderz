@@ -16,12 +16,12 @@
             app:destination="@id/SecondFragment" />
 
         <action
-            android:id="@+id/action_WelcomeFirstFragment_to_SignInFragment"
-            app:destination="@id/SignInFragment" />
+            android:id="@+id/action_WelcomeFragment_to_LogInFragment"
+            app:destination="@id/LogInFragment" />
 
         <action
-            android:id="@+id/action_WelcomeFirstFragment_to_SignUpFragment"
-            app:destination="@id/SignUpFragment" />
+            android:id="@+id/action_WelcomeFragment_to_RegisterFragment"
+            app:destination="@id/RegisterFragment" />
     </fragment>
 
 
@@ -38,33 +38,33 @@
 
 
     <fragment
-        android:id="@+id/SignInFragment"
-        android:name="com.example.lovefinderz.SignInFragment"
-        android:label="@string/sign_in"
-        tools:layout="@layout/fragment_sign_in">
+        android:id="@+id/LogInFragment"
+        android:name="com.example.lovefinderz.LogInFragment"
+        android:label="@string/log_in"
+        tools:layout="@layout/fragment_log_in">
 
         <action
-            android:id="@+id/action_SignInFragment_to_ProfileFragment"
+            android:id="@+id/action_LogInFragment_to_ProfileFragment"
             app:destination="@id/ProfileFragment" />
 
         <action
-            android:id="@+id/action_SignInFragment_to_WelcomeFragment"
+            android:id="@+id/action_LogInFragment_to_WelcomeFragment"
             app:destination="@id/WelcomeFragment" />
     </fragment>
 
 
     <fragment
-        android:id="@+id/SignUpFragment"
-        android:name="com.example.lovefinderz.SignUpFragment"
-        android:label="@string/sign_up"
-        tools:layout="@layout/fragment_sign_up">
+        android:id="@+id/RegisterFragment"
+        android:name="com.example.lovefinderz.RegisterFragment"
+        android:label="@string/register"
+        tools:layout="@layout/fragment_register">
 
         <action
-            android:id="@+id/action_SignUpFragment_to_ProfileFragment"
+            android:id="@+id/action_RegisterFragment_to_ProfileFragment"
             app:destination="@id/ProfileFragment" />
 
         <action
-            android:id="@+id/action_SignUpFragment_to_WelcomeFragment"
+            android:id="@+id/action_RegisterFragment_to_WelcomeFragment"
             app:destination="@id/WelcomeFragment" />
     </fragment>
 

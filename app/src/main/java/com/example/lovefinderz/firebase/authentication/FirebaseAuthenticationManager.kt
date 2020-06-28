@@ -15,6 +15,7 @@ class FirebaseAuthenticationManager @Inject constructor(private val authenticati
 
     override fun register(email: String, password: String, userName: String, onResult: (Boolean) -> Unit) {
         authentication.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+            println("BreakPoint")
             if (it.isComplete && it.isSuccessful) {
                 authentication.currentUser?.updateProfile(
                     UserProfileChangeRequest

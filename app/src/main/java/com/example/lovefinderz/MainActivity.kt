@@ -33,7 +33,16 @@ class MainActivity : AppCompatActivity() {
 
         //TODO: Add menu options' actions
         return when (item.itemId) {
-            R.id.action_browse -> true
+            R.id.action_browse -> {
+                Snackbar.make(window.decorView, "Pressed 'Browse'", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+                true
+            }
+            R.id.action_home -> {
+                Snackbar.make(window.decorView, "Pressed 'Home'", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

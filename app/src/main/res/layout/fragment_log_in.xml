@@ -4,67 +4,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignInFragment">
-
+    tools:context=".LogInFragment">
 
     <TextView
-        android:id="@+id/textview_sign_up_title"
-        android:layout_width="47dp"
-        android:layout_height="14dp"
-        android:text="@string/sign_in"
-        app:layout_constraintBottom_toTopOf="@+id/textInput_login"
+        android:id="@+id/log_in_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/log_in"
+        app:layout_constraintBottom_toTopOf="@+id/log_in_input_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.658" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInput_login"
-        android:layout_width="409dp"
+        android:id="@+id/log_in_input_login"
+        android:layout_width="381dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="44dp"
-        app:layout_constraintBottom_toTopOf="@+id/textInput_password"
+        app:layout_constraintBottom_toTopOf="@+id/log_in_input_password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:hint="@string/username" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInput_password"
-        android:layout_width="409dp"
+        android:id="@+id/log_in_input_password"
+        android:layout_width="381dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="104dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_sign_in_confirm"
+
+        app:passwordToggleEnabled="true"
+        app:layout_constraintBottom_toTopOf="@+id/log_in_button_confirm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:inputType="textPassword"
             android:hint="@string/password" />
     </com.google.android.material.textfield.TextInputLayout>
 
+
+
+
     <Button
-        android:id="@+id/button_sign_in_cancel"
+        android:id="@+id/log_in_button_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="116dp"
         android:text="@string/cancel"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button_sign_in_confirm"
+        app:layout_constraintEnd_toStartOf="@+id/log_in_button_confirm"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button_sign_in_confirm"
+        android:id="@+id/log_in_button_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="64dp"
         android:layout_marginBottom="116dp"
-        android:text="@string/sign_in"
+        android:text="@string/log_in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

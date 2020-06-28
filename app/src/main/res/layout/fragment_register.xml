@@ -4,15 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignUpFragment">
+    tools:context=".RegisterFragment">
 
 
     <TextView
-        android:id="@+id/textview_sign_up_title"
-        android:layout_width="47dp"
-        android:layout_height="14dp"
-        android:text="@string/sign_up"
-        app:layout_constraintBottom_toTopOf="@+id/textInput_login"
+        android:id="@+id/register_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register"
+        app:layout_constraintBottom_toTopOf="@+id/register_label_error"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.824" />
+
+
+    <TextView
+        android:id="@+id/register_label_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/register_input_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,82 +33,92 @@
         app:layout_constraintVertical_bias="0.824" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInput_login"
-        android:layout_width="409dp"
+        android:id="@+id/register_input_login"
+        android:layout_width="381dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="44dp"
-        app:layout_constraintBottom_toTopOf="@+id/textInput_email"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/register_input_email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/username" />
+            android:hint="@string/username"
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInput_email"
-        android:layout_width="409dp"
+        android:id="@+id/register_input_email"
+        android:layout_width="381dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        app:layout_constraintBottom_toTopOf="@+id/textInput_password"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/register_input_password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email" />
+            android:hint="@string/email"
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInput_password"
-        android:layout_width="409dp"
+        android:id="@+id/register_input_password"
+        android:layout_width="381dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        app:layout_constraintBottom_toTopOf="@+id/textInput_password_2"
+        android:layout_marginBottom="24dp"
+
+        app:layout_constraintBottom_toTopOf="@+id/register_input_password_repeat"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/password" />
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInput_password_2"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="232dp"
+        android:id="@+id/register_input_password_repeat"
+        android:layout_width="381dp"
+        android:layout_height="58dp"
+        android:layout_marginBottom="184dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/repeat_password" />
+            android:hint="@string/repeat_password"
+            android:inputType="textPassword"
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/button_sign_up_cancel"
+        android:id="@+id/register_button_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="116dp"
         android:text="@string/cancel"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button_sign_up_confirm"
+        app:layout_constraintEnd_toStartOf="@+id/register_button_confirm"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button_sign_up_confirm"
+        android:id="@+id/register_button_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="64dp"
         android:layout_marginBottom="116dp"
-        android:text="@string/sign_up"
+        android:text="@string/register"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,12 +24,12 @@ class WelcomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<Button>(R.id.button_welcome_sign_in).setOnClickListener {
-            findNavController().navigate(R.id.action_WelcomeFirstFragment_to_SignInFragment)
+        view.findViewById<Button>(R.id.welcome_button_log_in).setOnClickListener {
+            findNavController().navigate(R.id.action_WelcomeFragment_to_LogInFragment)
         }
 
-        view.findViewById<Button>(R.id.button_welcome_sign_up).setOnClickListener {
-            findNavController().navigate(R.id.action_WelcomeFirstFragment_to_SignUpFragment)
+        view.findViewById<Button>(R.id.welcome_button_register).setOnClickListener {
+            findNavController().navigate(R.id.action_WelcomeFragment_to_RegisterFragment)
         }
 
         //TODO: check if user is logged in, and transit to ProfileFragment

@@ -6,8 +6,8 @@
     <!-- Strings used for fragments for navigation -->
     <string name="welcome_fragment_label">Welcome Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
-    <string name="sign_in">Sign In</string>
-    <string name="sign_up">Sign Up</string>
+    <string name="log_in">Sign In</string>
+    <string name="register">Sign Up</string>
     <string name="login">Login</string>
     <string name="previous">Previous</string>
 
@@ -26,4 +26,10 @@
     <string name="profile_edit_button_desc">Edit button</string>
     <string name="profile">Profile</string>
     <string name="profile_browser">Probile Browser</string>
+    <string name="username_error">Wrong username</string>
+    <string name="register_error">Error while registering</string>
+    <string name="repeat_password_error">Passwords don\'t match</string>
+    <string name="show_password_error">Show password error</string>
+    <string name="show_email_error">Show email error</string>
+    <string name="show_login_error">Show login error</string>
 </resources>
