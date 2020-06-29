@@ -7,17 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
+import com.example.lovefinderz.ui.welcome.WelcomeView
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class WelcomeFragment : Fragment() {
+class WelcomeFragment : Fragment(), WelcomeView {
+
+    private val presenter by lazy { welcomePresenter() }
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        presenter.setView(this)
+
         return inflater.inflate(R.layout.fragment_welcome, container, false)
     }
 
@@ -32,7 +37,13 @@ class WelcomeFragment : Fragment() {
             findNavController().navigate(R.id.action_WelcomeFragment_to_RegisterFragment)
         }
 
+        presenter.viewReady()
+
         //TODO: check if user is logged in, and transit to ProfileFragment
 
+    }
+
+    override fun startMainScreen() {
+        //TODO("Not yet implemented")
     }
 }

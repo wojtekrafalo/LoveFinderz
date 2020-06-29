@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
+import com.example.lovefinderz.common.onClick
+import com.example.lovefinderz.common.onTextChanged
 import com.example.lovefinderz.ui.register.RegisterView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
@@ -35,29 +37,31 @@ class RegisterFragment : Fragment(), RegisterView {
 
 //        register_label_error.error = ""
 
-        view.findViewById<TextInputLayout>(R.id.register_input_login)
-            .setOnKeyListener { v, actionId, event ->
-                presenter.onUsernameChanged(event.toString())
+        register_edit_text_login.onTextChanged {presenter.onUsernameChanged(it) }
+        register_edit_text_email.onTextChanged { presenter.onEmailChanged(it) }
+        register_edit_text_password.onTextChanged { presenter.onPasswordChanged(it) }
+        register_edit_text_password_repeat.onTextChanged { presenter.onRepeatPasswordChanged(it) }
 
-                Snackbar.make(view, "Edited", Snackbar.LENGTH_SHORT)
-                    .setAction("Action", null).show()
-                true
-            }
+//        view.findViewById<TextInputLayout>(R.id.register_input_login)
+//            .setOnKeyListener { v, actionId, event ->
+//                presenter.onUsernameChanged(event.toString())
+//
+//                Snackbar.make(view, "Edited", Snackbar.LENGTH_SHORT)
+//                    .setAction("Action", null).show()
+//                true
+//            }
 
-//        view.findViewById<Button>(R.id.register_button_confirm).setOnClickListener {
+        register_button_cancel.onClick { findNavController().navigate(R.id.action_RegisterFragment_to_WelcomeFragment) }
+        register_button_confirm.onClick { presenter.onRegisterTapped() }
+//        view.findViewById<Button>(R.id.register_button_cancel).setOnClickListener {
 //            findNavController().navigate(R.id.action_RegisterFragment_to_WelcomeFragment)
 //        }
-
-        view.findViewById<Button>(R.id.register_button_cancel).setOnClickListener {
-            findNavController().navigate(R.id.action_RegisterFragment_to_WelcomeFragment)
-        }
-
-        view.findViewById<Button>(R.id.register_button_confirm).setOnClickListener { presenter.onRegisterTapped() }
-        view.findViewById<Button>(R.id.register_button_confirm).setOnClickListener { presenter.onRegisterTapped() }
-
+//        view.findViewById<Button>(R.id.register_button_confirm)
+//            .setOnClickListener { presenter.onRegisterTapped() }
     }
 
     override fun onRegisterSuccess() {
+        println("BreakPoint")
         findNavController().navigate(R.id.action_RegisterFragment_to_ProfileFragment)
     }
 
@@ -67,17 +71,21 @@ class RegisterFragment : Fragment(), RegisterView {
 
     override fun showUsernameError() {
         register_label_error.error = getString(R.string.show_login_error)
+        register_label_error.text = getString(R.string.show_login_error)
     }
 
     override fun showEmailError() {
         register_label_error.error = getString(R.string.show_email_error)
+        register_label_error.text = getString(R.string.show_email_error)
     }
 
     override fun showPasswordError() {
         register_label_error.error = getString(R.string.show_password_error)
+        register_label_error.text = getString(R.string.show_password_error)
     }
 
     override fun showPasswordMatchingError() {
         register_label_error.error = getString(R.string.repeat_password_error)
+        register_label_error.text = getString(R.string.repeat_password_error)
     }
 }

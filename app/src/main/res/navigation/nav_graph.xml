@@ -68,12 +68,15 @@
             app:destination="@id/WelcomeFragment" />
     </fragment>
 
-
     <fragment
         android:id="@+id/ProfileFragment"
         android:name="com.example.lovefinderz.ProfileFragment"
         android:label="@string/profile"
         tools:layout="@layout/fragment_profile">
+
+        <action
+            android:id="@+id/action_ProfileFragment_to_WelcomeFragment"
+            app:destination="@id/WelcomeFragment" />
     </fragment>
 
 

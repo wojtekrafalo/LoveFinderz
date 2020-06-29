@@ -1,6 +1,5 @@
 package com.example.lovefinderz.presentation.implementation
 
-import android.view.View
 import com.example.lovefinderz.firebase.authentication.FirebaseAuthenticationInterface
 import com.example.lovefinderz.firebase.database.FirebaseDatabaseInterface
 import com.example.lovefinderz.presentation.ProfilePresenter
@@ -24,7 +23,7 @@ class ProfilePresenterImpl @Inject constructor(
 
       view.showUsername(it.username)
       view.showEmail(it.email)
-      it.favoriteJokes?.count { it.authorId==userId }?.let { it1 -> view.showNumberOfJokes(it1) }
+      it.favoriteUsers?.count { it.id == userId }?.let { it1 -> view.showNumberOfJokes(it1) }
     }
   }
 

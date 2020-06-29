@@ -28,6 +28,7 @@
     <string name="profile_browser">Probile Browser</string>
     <string name="username_error">Wrong username</string>
     <string name="register_error">Error while registering</string>
+    <string name="log_in_error">Error while logging in</string>
     <string name="repeat_password_error">Passwords don\'t match</string>
     <string name="show_password_error">Show password error</string>
     <string name="show_email_error">Show email error</string>

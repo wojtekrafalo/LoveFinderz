@@ -56,7 +56,6 @@ class RegisterPresenterImpl @Inject constructor(
 
   override fun onRegisterTapped() {
     println("BreakPoint")
-    userData.setHardcodedCredentials()
 
     if (userData.isValid()) {
       val (name, email, password) = userData

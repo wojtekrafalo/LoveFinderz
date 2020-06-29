@@ -11,12 +11,8 @@ data class User(
     val id: String,
     val username: String,
     val email: String,
-    val favoriteJokes: List<Joke>? = listOf()
+    internal val favoriteUsers: List<User>? = listOf()
 //    ,
 //    val photo: String?,
 //    val likedProfiles: List<User>? = listOf()
 )
-//{
-//    constructor(id: String, username: String, email: String) : this(id, username, email, null, null, null)
-//    constructor(id: String, username: String, email: String, favoriteJokes: List<Joke>) : this(id, username, email, favoriteJokes, null, null)
-//}

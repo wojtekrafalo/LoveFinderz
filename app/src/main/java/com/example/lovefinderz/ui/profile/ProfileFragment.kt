@@ -1,16 +1,14 @@
 package com.example.lovefinderz.ui.profile
 
-import android.content.Intent
 import android.os.Bundle
 //import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.lovefinderz.R
 import com.example.lovefinderz.profilePresenter
-import com.example.lovefinderz.ui.welcome.WelcomeActivity
-import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : Fragment(), ProfileView {
 
@@ -44,7 +42,8 @@ class ProfileFragment : Fragment(), ProfileView {
   }
 
   override fun openWelcome() {
-    startActivity(Intent(activity, WelcomeActivity::class.java))
-    activity?.finish()
+    findNavController().navigate(R.id.action_ProfileFragment_to_WelcomeFragment)
+//    startActivity(Intent(activity, WelcomeActivity::class.java))
+//    activity?.finish()
   }
 }
