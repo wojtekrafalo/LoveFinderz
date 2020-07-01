@@ -9,17 +9,19 @@
     <string name="log_in">Sign In</string>
     <string name="register">Sign Up</string>
     <string name="login">Login</string>
+    <string name="login_description">Login: </string>
     <string name="previous">Previous</string>
 
     <string name="hello_first_fragment">Hello to LoveFinderz</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="error_title">Error of title</string>
-    <string name="error_message">Error of message</string>
+    <string name="error_message">General error</string>
     <string name="general_positive_button">OK</string>
     <string name="joke_error">Wrong joke</string>
     <string name="cancel">Cancel</string>
     <string name="username">Username</string>
     <string name="email">Email</string>
+    <string name="email_description">Email: </string>
     <string name="password" >Password</string>
     <string name="repeat_password">Repeat password</string>
     <string name="profile_image_desc">Profile image</string>
@@ -33,4 +35,5 @@
     <string name="show_password_error">Show password error</string>
     <string name="show_email_error">Show email error</string>
     <string name="show_login_error">Show login error</string>
+    <string name="show_email_and_password_error">Show error</string>
 </resources>

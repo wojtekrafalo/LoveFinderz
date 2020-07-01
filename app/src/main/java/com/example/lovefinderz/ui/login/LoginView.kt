@@ -6,6 +6,8 @@ interface LoginView {
 
   fun showEmailError()
 
+  fun showEmailAndPasswordError()
+
   fun onLoginSuccess()
 
   fun showLoginError()

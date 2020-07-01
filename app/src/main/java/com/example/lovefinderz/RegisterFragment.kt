@@ -52,12 +52,17 @@ class RegisterFragment : Fragment(), RegisterView {
 //            }
 
         register_button_cancel.onClick { findNavController().navigate(R.id.action_RegisterFragment_to_WelcomeFragment) }
-        register_button_confirm.onClick { presenter.onRegisterTapped() }
 //        view.findViewById<Button>(R.id.register_button_cancel).setOnClickListener {
 //            findNavController().navigate(R.id.action_RegisterFragment_to_WelcomeFragment)
 //        }
-//        view.findViewById<Button>(R.id.register_button_confirm)
-//            .setOnClickListener { presenter.onRegisterTapped() }
+
+        //TODO: Change to syntax with .onClick method.
+//        register_button_confirm.onClick { presenter.onRegisterTapped() }
+        view.findViewById<Button>(R.id.register_button_confirm)
+            .setOnClickListener {
+                println("BreakPoint")
+                presenter.onRegisterTapped()
+            }
     }
 
     override fun onRegisterSuccess() {
@@ -65,8 +70,10 @@ class RegisterFragment : Fragment(), RegisterView {
         findNavController().navigate(R.id.action_RegisterFragment_to_ProfileFragment)
     }
 
+    //TODO: Add labels for specific errors.
     override fun showSignUpError() {
         register_label_error.error = getString(R.string.register_error)
+        register_label_error.text = getString(R.string.register_error)
     }
 
     override fun showUsernameError() {

@@ -1,6 +1,5 @@
 package com.example.lovefinderz.presentation.implementation
 
-import android.view.View
 import com.example.lovefinderz.common.*
 import com.example.lovefinderz.firebase.authentication.FirebaseAuthenticationInterface
 import com.example.lovefinderz.firebase.database.FirebaseDatabaseInterface
@@ -25,37 +24,42 @@ class RegisterPresenterImpl @Inject constructor(
   override fun onUsernameChanged(username: String) {
     userData.name = username
 
-    if (!isUsernameValid(username)) {
-      view.showUsernameError()
-    }
+//    if (!isUsernameValid(username)) {
+//      view.showUsernameError()
+//    }
   }
 
   override fun onEmailChanged(email: String) {
     userData.email = email
 
-    if (!isEmailValid(email)) {
-      view.showEmailError()
-    }
+//    if (!isEmailValid(email)) {
+//      view.showEmailError()
+//    }
   }
 
   override fun onPasswordChanged(password: String) {
     userData.password = password
 
-    if (!isPasswordValid(password)) {
-      view.showPasswordError()
-    }
+//    if (!isPasswordValid(password)) {
+//      view.showPasswordError()
+//    }
   }
 
   override fun onRepeatPasswordChanged(repeatPassword: String) {
     userData.repeatPassword = repeatPassword
 
-    if (!arePasswordsSame(userData.password, repeatPassword)) {
-      view.showPasswordMatchingError()
-    }
+//    if (!arePasswordsSame(userData.password, repeatPassword)) {
+//      view.showPasswordMatchingError()
+//    }
   }
 
   override fun onRegisterTapped() {
     println("BreakPoint")
+
+    val isUsernameValid = isUsernameValid(userData.name)
+    val isEmailValid = isEmailValid(userData.email)
+    val isPasswordValid = isPasswordValid(userData.password)
+    val arePasswordsSame = arePasswordsSame(userData.password, userData.repeatPassword)
 
     if (userData.isValid()) {
       val (name, email, password) = userData
@@ -63,6 +67,15 @@ class RegisterPresenterImpl @Inject constructor(
       authentication.register(email, password, name) { isSuccessful ->
         onRegisterResult(isSuccessful, name, email)
       }
+    } else {
+      if (isUsernameValid)
+        view.showUsernameError()
+      if (isEmailValid)
+        view.showEmailError()
+      if (isPasswordValid)
+        view.showPasswordError()
+      if (arePasswordsSame)
+        view.showPasswordMatchingError()
     }
   }
 
