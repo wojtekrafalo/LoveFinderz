@@ -12,7 +12,8 @@ private const val KEY_EMAIL = "email"
 private const val KEY_USERNAME = "username"
 private const val KEY_ID = "id"
 
-class FirebaseDatabaseManager @Inject constructor(private val database: FirebaseDatabase) : FirebaseDatabaseInterface {
+class FirebaseDatabaseManager @Inject constructor(private val database: FirebaseDatabase) :
+    FirebaseDatabaseInterface {
 
     override fun createUser(id: String, name: String, email: String) {
         val user = User(id, name, email)
@@ -47,11 +48,11 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
 
 
                         //TODO: Not the document.id. Sth else:
-                        if ((document.data[id] as HashMap<*, *>)[KEY_ID] == id) {
+                        if (document.data[id] != null && ((document.data[id] as HashMap<*, *>)[KEY_ID] == id)) {
 //                            Log.d("READ", "Condition is fine. Got to onResult()")
                             val us = (document.data[id] as HashMap<*, *>)[KEY_USERNAME].toString()
                             val em = (document.data[id] as HashMap<*, *>)[KEY_EMAIL].toString()
-                            val user = User( id, us, em)
+                            val user = User(id, us, em)
                             onResult(user)
                         }
                     }
