@@ -27,13 +27,13 @@ fun showEditTextModalDialog(from: Context, title: String): String {
     input.inputType = InputType.TYPE_CLASS_TEXT
     builder.setView(input)
 
-    var m_Text = ""
+    var typedText = ""
 
     // Set up the buttons
-    builder.setPositiveButton("OK") { dialog, which -> m_Text = input.text.toString() }
+    builder.setPositiveButton("OK") { dialog, which -> typedText = input.text.toString() }
     builder.setNegativeButton("Cancel") { dialog, which -> dialog.cancel() }
 
     builder.show()
 
-    return m_Text
+    return typedText
 }

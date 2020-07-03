@@ -1,6 +1,5 @@
 package com.example.lovefinderz.presentation.implementation
 
-import android.view.View
 import com.example.lovefinderz.firebase.authentication.FirebaseAuthenticationInterface
 import com.example.lovefinderz.presentation.WelcomePresenter
 import com.example.lovefinderz.ui.welcome.WelcomeView

@@ -1,6 +1,5 @@
 package com.example.lovefinderz.presentation.implementation
 
-import android.view.View
 import com.example.lovefinderz.common.isEmailValid
 import com.example.lovefinderz.common.isPasswordValid
 import com.example.lovefinderz.firebase.authentication.FirebaseAuthenticationInterface

@@ -1,6 +1,5 @@
 package com.example.lovefinderz
 
-import com.google.firebase.FirebaseApp
 import android.app.Application
 import com.example.lovefinderz.di.AppComponent
 import com.example.lovefinderz.di.DaggerAppComponent

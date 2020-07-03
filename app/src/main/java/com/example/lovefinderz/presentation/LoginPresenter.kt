@@ -1,6 +1,5 @@
 package com.example.lovefinderz.presentation
 
-import com.example.lovefinderz.presentation.BasePresenter
 import com.example.lovefinderz.ui.login.LoginView
 
 interface LoginPresenter : BasePresenter<LoginView> {

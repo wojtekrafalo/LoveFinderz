@@ -1,16 +1,9 @@
 package com.example.lovefinderz.firebase.database
 
 import android.util.Log
-import com.example.lovefinderz.common.showGeneralError
 import com.example.lovefinderz.model.User
-import com.example.lovefinderz.model.UserResponse
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import javax.inject.Inject
 
 
@@ -18,8 +11,6 @@ private const val KEY_USER = "user"
 private const val KEY_EMAIL = "email"
 private const val KEY_USERNAME = "username"
 private const val KEY_ID = "id"
-private const val KEY_JOKE = "joke"
-private const val KEY_FAVORITE = "favorite"
 
 class FirebaseDatabaseManager @Inject constructor(private val database: FirebaseDatabase) : FirebaseDatabaseInterface {
 
