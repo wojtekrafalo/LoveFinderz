@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LoveFinderrz</string>
+    <string name="log_in">Zaloguj się</string>
+    <string name="second_fragment_label">Drugi Fragment</string>
+    <string name="welcome_fragment_label">Witaj</string>
+    <string name="action_home">Profil</string>
+    <string name="action_browse">Przeglądaj</string>
+    <string name="register">Zarejestruj się</string>
+    <string name="login_description">"Login: "</string>
+    <string name="login">Login</string>
+    <string name="previous">Poprzedni</string>
+    <string name="hello_first_fragment">Witaj w LoveFinderrz</string>
+    <string name="error_title">Źle wypełniony tytuł</string>
+    <string name="hello_second_fragment">Witaj w Drugim Fragmencie</string>
+    <string name="general_positive_button">OK</string>
+    <string name="error_message">Błąd</string>
+    <string name="cancel">Anuluj</string>
+    <string name="username">Użytkownik</string>
+    <string name="email">Email</string>
+    <string name="email_description">"Email: "</string>
+    <string name="password">Hasło</string>
+    <string name="repeat_password">Powtórz hasło</string>
+    <string name="profile_image_desc">Zdjęcie profilowe</string>
+    <string name="profile_edit_button_desc">Edytuj</string>
+    <string name="profile">Profil</string>
+    <string name="profile_browser">Przeglądaj profile</string>
+    <string name="username_error">Zła nazwa użytkownika</string>
+    <string name="register_error">Błąd rejestracji</string>
+    <string name="log_in_error">Błąd logowania</string>
+    <string name="repeat_password_error">Hasła nie są takie same</string>
+    <string name="show_password_error">Błąd hasła</string>
+    <string name="show_email_error">Błąd adresu email</string>
+    <string name="show_login_error">Błąd loginu</string>
+    <string name="show_email_and_password_error">Błąd</string>
+    <string name="log_out">Wyloguj</string>
+    <string name="profile_label_change_login">Edytuj login</string>
+    <string name="profile_label_change_photo">Dodaj zdjęcie</string>
+</resources>

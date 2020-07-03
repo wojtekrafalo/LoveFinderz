@@ -16,9 +16,9 @@ class WelcomePresenterImpl @Inject constructor(
     this.view = view
   }
 
-  override fun viewReady() {
+  override fun transitLoggedUser() {
     if (authenticationInterface.getUserId().isNotBlank()) {
-      view.startMainScreen()
+      view.transitToProfile()
     }
   }
 }

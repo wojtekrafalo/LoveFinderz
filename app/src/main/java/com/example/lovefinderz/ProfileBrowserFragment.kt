@@ -28,7 +28,7 @@ class ProfileBrowserFragment : Fragment() {
 
         }
 
-        view.findViewById<Button>(R.id.profile_browser_like_button).setOnClickListener {
+        view.findViewById<Button>(R.id.profile_button_change_photo).setOnClickListener {
 
         }
     }

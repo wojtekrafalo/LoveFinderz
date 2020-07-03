@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
+import com.example.lovefinderz.common.onClick
 import com.example.lovefinderz.common.onTextChanged
 import com.example.lovefinderz.common.showGeneralError
 import com.example.lovefinderz.ui.login.LoginView
 import kotlinx.android.synthetic.main.fragment_log_in.*
+import kotlinx.android.synthetic.main.fragment_register.*
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -20,11 +22,9 @@ class LogInFragment : Fragment(), LoginView {
     private val presenter by lazy { loginPresenter() }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-
         presenter.setView(this)
         return inflater.inflate(R.layout.fragment_log_in, container, false)
     }
@@ -32,16 +32,11 @@ class LogInFragment : Fragment(), LoginView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<Button>(R.id.log_in_button_cancel).setOnClickListener {
-            findNavController().navigate(R.id.action_LogInFragment_to_WelcomeFragment)
-        }
+        log_in_edit_text_email.onTextChanged { presenter.onEmailChanged(it) }
+        log_in_edit_text_password.onTextChanged { presenter.onPasswordChanged(it) }
 
-        log_in_edit_text_email.onTextChanged {presenter.onEmailChanged(it) }
-        log_in_edit_text_password.onTextChanged {presenter.onPasswordChanged(it) }
-        view.findViewById<Button>(R.id.log_in_button_confirm).setOnClickListener {
-//            findNavController().navigate(R.id.action_LogInFragment_to_ProfileFragment)
-            presenter.onLoginTapped()
-        }
+        log_in_button_confirm.onClick { presenter.onLoginTapped() }
+        log_in_button_cancel.onClick { findNavController().navigate(R.id.action_LogInFragment_to_WelcomeFragment) }
     }
 
     override fun showPasswordError() {

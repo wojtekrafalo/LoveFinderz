@@ -13,12 +13,4 @@ data class RegisterRequest(
     fun isValid(): Boolean = isUsernameValid(name)
             && isEmailValid(email)
             && arePasswordsSame(password, repeatPassword)
-//
-//    //TODO: Delete and create users with textFields from app.
-//    fun setHardcodedCredentials() {
-//        name = "kendrix"
-//        email = "kendrix_popo@gmail.com"
-//        password = "qwerty123"
-//        repeatPassword = "qwerty123"
-//    }
 }

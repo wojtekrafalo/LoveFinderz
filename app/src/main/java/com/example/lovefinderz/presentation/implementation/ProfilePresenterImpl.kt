@@ -23,7 +23,8 @@ class ProfilePresenterImpl @Inject constructor(
 
       view.showUsername(it.username)
       view.showEmail(it.email)
-      it.favoriteUsers?.count { it.id == userId }?.let { it1 -> view.showNumberOfJokes(it1) }
+      //TODO: Delete below, but syntax can be reused.
+//      it.favoriteUsers?.count { it.id == userId }?.let { it1 -> view.showNumberOfJokes(it1) }
     }
   }
 

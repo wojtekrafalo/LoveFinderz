@@ -1,27 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">LoveFinderrz</string>
     <string name="action_browse">Browse</string>
     <string name="action_home">Home</string>
-
-    <!-- Strings used for fragments for navigation -->
     <string name="welcome_fragment_label">Welcome</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="log_in">Sign In</string>
     <string name="register">Sign Up</string>
     <string name="login">Login</string>
-    <string name="login_description">Login: </string>
+    <string name="login_description">"Login: "</string>
     <string name="previous">Previous</string>
-
     <string name="hello_first_fragment">Hello to LoveFinderrz</string>
-    <string name="hello_second_fragment">Hello second fragment.</string>
     <string name="error_title">Error of title</string>
     <string name="error_message">General error</string>
+    <string name="hello_second_fragment">Hello second fragment.</string>
     <string name="general_positive_button">OK</string>
     <string name="cancel">Cancel</string>
     <string name="username">Username</string>
     <string name="email">Email</string>
-    <string name="email_description">Email: </string>
-    <string name="password" >Password</string>
+    <string name="email_description">"Email: "</string>
+    <string name="password">Password</string>
     <string name="repeat_password">Repeat password</string>
     <string name="profile_image_desc">Profile image</string>
     <string name="profile_edit_button_desc">Edit button</string>

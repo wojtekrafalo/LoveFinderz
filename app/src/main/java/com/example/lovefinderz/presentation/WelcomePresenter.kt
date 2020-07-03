@@ -4,5 +4,5 @@ import com.example.lovefinderz.ui.welcome.WelcomeView
 
 interface WelcomePresenter : BasePresenter<WelcomeView> {
 
-  fun viewReady()
+  fun transitLoggedUser()
 }
