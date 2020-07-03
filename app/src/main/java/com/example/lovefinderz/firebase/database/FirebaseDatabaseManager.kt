@@ -48,10 +48,12 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
 
 
                         //TODO: Not the document.id. Sth else:
-                        if (document.data[id] != null && ((document.data[id] as HashMap<*, *>)[KEY_ID] == id)) {
+                        val map = (document.data as HashMap<*, *>)
+//                        if (document.data[id] != null && ((document.data[id] as HashMap<*, *>)[KEY_ID] == id)) {
+                        if (map[KEY_ID] == id) {
 //                            Log.d("READ", "Condition is fine. Got to onResult()")
-                            val us = (document.data[id] as HashMap<*, *>)[KEY_USERNAME].toString()
-                            val em = (document.data[id] as HashMap<*, *>)[KEY_EMAIL].toString()
+                            val us = map[KEY_USERNAME].toString()
+                            val em = map[KEY_EMAIL].toString()
                             val user = User(id, us, em)
                             onResult(user)
                         }

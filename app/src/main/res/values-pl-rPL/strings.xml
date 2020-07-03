@@ -36,4 +36,6 @@
     <string name="log_out">Wyloguj</string>
     <string name="profile_label_change_login">Edytuj login</string>
     <string name="profile_label_change_photo">Dodaj zdjęcie</string>
+    <string name="log_out_success">Pomyślnie wylogowano.</string>
+    <string name="register_success">Pomyślnie zarejestrowano. Możesz się już zalogować.</string>
 </resources>

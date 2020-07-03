@@ -1,0 +1,34 @@
+package com.example.lovefinderz.presentation.implementation
+
+import com.example.lovefinderz.firebase.authentication.FirebaseAuthenticationInterface
+import com.example.lovefinderz.firebase.database.FirebaseDatabaseInterface
+import com.example.lovefinderz.presentation.MainViewPresenter
+import com.example.lovefinderz.ui.main.MainView
+import javax.inject.Inject
+
+class MainViewPresenterImpl @Inject constructor(
+  private val database: FirebaseDatabaseInterface,
+  private val authentication: FirebaseAuthenticationInterface
+) : MainViewPresenter {
+
+  private lateinit var view: MainView
+
+  override fun setView(view: MainView) {
+    this.view = view
+  }
+
+  override fun onLogOutTapped() {
+    authentication.logOut {
+      view.onLogOutSuccess()
+    }
+  }
+
+  override fun onHomeTapped() {
+    //TODO: load ProfileFragment
+  }
+
+  override fun onBrowseTapped() {
+    //TODO: load BrowseProfileFragment
+  }
+}
+

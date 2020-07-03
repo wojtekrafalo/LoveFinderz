@@ -1,18 +1,22 @@
 package com.example.lovefinderz
 
 import android.os.Bundle
-//import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.example.lovefinderz.ui.main.MainView
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(), MainView {
+
+    private val presenter by lazy { mainViewPresenter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+        presenter.setView(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -26,19 +30,51 @@ class MainActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-        //TODO: Add menu options' actions
         return when (item.itemId) {
             R.id.action_browse -> {
+                presenter.onBrowseTapped()
                 Snackbar.make(window.decorView, "Pressed 'Browse'", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
                 true
             }
             R.id.action_home -> {
+                presenter.onHomeTapped()
                 Snackbar.make(window.decorView, "Pressed 'Home'", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
                 true
             }
+            R.id.action_log_out -> {
+                presenter.onLogOutTapped()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onLogOutSuccess() {
+        val message = getString(R.string.log_out_success)
+        Snackbar.make(window.decorView, message, Snackbar.LENGTH_LONG)
+            .setAction("Action", null).show()
+
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.nav_host_fragment, WelcomeFragment())
+            .commit()
+    }
+
+    override fun onHomeSuccess() {
+        //TODO:Add loading of profile.
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.nav_host_fragment, ProfileFragment())
+            .commit()
+    }
+
+    override fun onBrowseSuccess() {
+        //TODO:Add loading of profiles.
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.nav_host_fragment, ProfileBrowserFragment())
+            .commit()
     }
 }

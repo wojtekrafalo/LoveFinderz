@@ -36,4 +36,6 @@
     <string name="log_out">Log out</string>
     <string name="profile_label_change_photo">Add photo</string>
     <string name="profile_label_change_login">Edit login</string>
+    <string name="register_success">Successfully registered. Now sign in.</string>
+    <string name="log_out_success">Successfully signed out.</string>
 </resources>

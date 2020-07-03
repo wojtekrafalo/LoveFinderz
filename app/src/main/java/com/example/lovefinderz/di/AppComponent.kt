@@ -9,6 +9,8 @@ import javax.inject.Singleton
 @Singleton
 interface AppComponent {
 
+  fun mainViewPresenter(): MainViewPresenter
+
   fun registerPresenter(): RegisterPresenter
 
   fun loginPresenter(): LoginPresenter

@@ -15,6 +15,9 @@ abstract class PresentationModule {
   abstract fun registerPresenter(registerPresenter: RegisterPresenterImpl): RegisterPresenter
 
   @Binds
+  abstract fun mainViewPresenter(mainViewPresenter: MainViewPresenterImpl): MainViewPresenter
+
+  @Binds
   abstract fun profilePresenter(profilePresenterImpl: ProfilePresenterImpl): ProfilePresenter
 
   @Binds

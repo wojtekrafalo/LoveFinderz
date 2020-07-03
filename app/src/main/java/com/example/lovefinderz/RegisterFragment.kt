@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.lovefinderz.common.onClick
 import com.example.lovefinderz.common.onTextChanged
 import com.example.lovefinderz.ui.register.RegisterView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_register.*
 
 /**
@@ -68,7 +69,13 @@ class RegisterFragment : Fragment(), RegisterView {
 
     override fun onRegisterSuccess() {
         println("BreakPoint")
-        findNavController().navigate(R.id.action_RegisterFragment_to_ProfileFragment)
+        //TODO: Make a modal pop up window with information instead of snackbar.
+        findNavController().navigate(R.id.action_RegisterFragment_to_WelcomeFragment)
+        val message = getString(R.string.register_success)
+        activity?.window?.decorView?.let {
+            Snackbar.make(it, message, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+        }
     }
 
     //TODO: Add labels for specific errors.
