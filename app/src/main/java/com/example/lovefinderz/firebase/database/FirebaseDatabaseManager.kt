@@ -189,12 +189,17 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
         onFailure: (String) -> Unit
     ) {
         val errorMessage = "Error while sending protocol."
-//        val protocol = UserSympathy(relation.thisUserId, relation.otherUserId)
-//
-//        if (relation.isLiked)
-//            protocol.like()
-//        else
-//            protocol.dislike()
+        val protocol = UserSympathy(
+            relation.thisUserId,
+            relation.otherUserId,
+            { onSuccess() },
+            { onFailure(errorMessage) }
+        )
+
+        if (relation.isLiked)
+            protocol.like()
+        else
+            protocol.dislike()
     }
 
     override fun loadMatchingProfiles(
