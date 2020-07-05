@@ -40,7 +40,6 @@ class FirebaseAuthenticationManager @Inject constructor(private val authenticati
     }
 
     override fun transitIfLogged(transition: () -> Unit) {
-        //TODO: Check if user is logged in.
         val userId = this.getUserId()
         if(userId != "")
             transition()

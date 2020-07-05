@@ -4,13 +4,13 @@ import com.example.lovefinderz.common.*
 
 
 data class RegisterRequest(
-    var name: String = "",
+    var username: String = "",
     var email: String = "",
     var password: String = "",
     var repeatPassword: String = ""
 ) {
 
-    fun isValid(): Boolean = isUsernameValid(name)
+    fun isValid(): Boolean = isUsernameValid(username)
             && isEmailValid(email)
             && arePasswordsSame(password, repeatPassword)
 }

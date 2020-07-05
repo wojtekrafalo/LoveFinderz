@@ -7,4 +7,6 @@ interface ProfileView {
   fun showEmail(email: String)
 
   fun openWelcome()
+
+  fun showErrorMessage(message: String)
 }

@@ -69,7 +69,6 @@ class MainActivity : AppCompatActivity(), MainView {
     }
 
     override fun onHomeSuccess() {
-        //TODO:Add loading of profile.
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.nav_host_fragment, ProfileFragment())
@@ -77,7 +76,6 @@ class MainActivity : AppCompatActivity(), MainView {
     }
 
     override fun onBrowseSuccess() {
-        //TODO:Add loading of profiles.
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.nav_host_fragment, ProfileBrowserFragment())
@@ -85,7 +83,6 @@ class MainActivity : AppCompatActivity(), MainView {
     }
 
     override fun onMatchesTapped() {
-        //TODO:Add loading of matches.
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.nav_host_fragment, MatchedProfileFragment())

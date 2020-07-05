@@ -3,6 +3,7 @@ package com.example.lovefinderz.presentation.implementation
 import com.example.lovefinderz.firebase.authentication.FirebaseAuthenticationInterface
 import com.example.lovefinderz.firebase.database.FirebaseDatabaseInterface
 import com.example.lovefinderz.model.User
+import com.example.lovefinderz.model.UserRelation
 import com.example.lovefinderz.presentation.ProfileBrowserPresenter
 import com.example.lovefinderz.ui.browser.ProfileBrowserView
 import javax.inject.Inject
@@ -19,23 +20,22 @@ class ProfileBrowserPresenterImpl @Inject constructor(
         this.view = view
     }
 
-    //TODO: add liking and not-liking, encrypting, loading new profile to the Profile Browser.
-    override fun onRateTapped(isLiked: Boolean) {
-        databaseInterface.addRatedProfile(authenticationInterface.getUserId(),
-            loadedUser.id,
-            isLiked,
+    override fun onRelationTapped(isLiked: Boolean) {
+
+        val relation = UserRelation(authenticationInterface.getUserId(), loadedUser.id, isLiked)
+
+        databaseInterface.storeRelation(
+            relation,
             { this.loadFreshProfile() },
-            { this.showProfileRatingError() })
+            { this.showRelationError(it) }
+        )
     }
 
-
-    //  override fun loadFreshProfile(onResult: (UserResponse) -> Unit) {
-    //TODO: Add onFailure event. The same as in onRateTapped()
     override fun loadFreshProfile() {
-        databaseInterface.getFreshProfile(
+        databaseInterface.loadFreshProfile(
             authenticationInterface.getUserId(),
             { profile -> this.sendProfileDataToView(profile) },
-            { this.showProfileLoadingError() })
+            { message -> this.showProfileLoadingError(message) })
     }
 
     override fun sendProfileDataToView(user: User) {
@@ -47,11 +47,11 @@ class ProfileBrowserPresenterImpl @Inject constructor(
         view.showAge(user.id)
     }
 
-    override fun showProfileRatingError() {
-        view.showProfileRatingError()
+    override fun showRelationError(errorMessage: String) {
+        view.showRelationError(errorMessage)
     }
 
-    override fun showProfileLoadingError() {
-        view.showProfileLoadingError()
+    override fun showProfileLoadingError(errorMessage: String) {
+        view.showProfileLoadingError(errorMessage)
     }
 }

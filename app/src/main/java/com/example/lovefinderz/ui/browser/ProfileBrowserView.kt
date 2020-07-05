@@ -8,7 +8,7 @@ interface ProfileBrowserView {
 
   fun showAge(dateOfBirth: String)
 
-  fun showProfileLoadingError()
+  fun showProfileLoadingError(errorMessage: String)
 
-  fun showProfileRatingError()
+  fun showRelationError(errorMessage: String)
 }

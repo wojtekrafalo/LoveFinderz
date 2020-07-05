@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.lovefinderz.common.onClick
 import com.example.lovefinderz.model.User
 import com.example.lovefinderz.ui.matched.MatchedProfileView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_matched_profile.*
 
 /**
@@ -42,4 +43,12 @@ class MatchedProfileFragment : Fragment(), MatchedProfileView {
         //TODO: Add elements to recyclerView: 'matched_profile_list'
     }
 
+    override fun showErrorMessage(message: String) {
+        //TODO: Add dialog with message
+        activity?.window?.decorView?.let {
+            Snackbar.make(it, message, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+
+        }
+    }
 }

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.lovefinderz.common.onClick
 import com.example.lovefinderz.ui.profile.ProfileView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 /**
@@ -58,5 +59,14 @@ class ProfileFragment : Fragment(), ProfileView {
     override fun openWelcome() {
         //TODO: Add 'Log Out' button on ProfileFragment or simply delete this function.
         findNavController().navigate(R.id.action_ProfileFragment_to_WelcomeFragment)
+    }
+
+    override fun showErrorMessage(message: String) {
+        activity?.window?.decorView?.let {
+            Snackbar.make(it, message, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+
+        }
+
     }
 }

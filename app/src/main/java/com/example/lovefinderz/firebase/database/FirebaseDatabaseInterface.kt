@@ -1,35 +1,54 @@
 package com.example.lovefinderz.firebase.database
 
 import com.example.lovefinderz.model.User
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.Query
+import com.example.lovefinderz.model.UserRelation
+import java.util.*
 
 
 interface FirebaseDatabaseInterface {
 
-    fun createUser(id: String, name: String, email: String)
-
-    fun getProfile(id: String, onResult: (User) -> Unit)
-
-    fun getProfiles(onResult: (MutableList<User>) -> Unit)
-
-    fun getFreshProfile(id: String, onSuccess: (User) -> Unit, onFailure: () -> Unit)
-
-    fun addRatedProfile(
-        idLiking: String,
-        idLiked: String,
-        isLiked: Boolean,
+    fun storeUser(
+        id: String,
+        user: User,
         onSuccess: () -> Unit,
         onFailure: () -> Unit
     )
 
-    fun getMatchedProfiles(id: String, onResult: (MutableList<User>) -> Unit)
+//    fun updateRelatedUserList(
+//        thisUserId: String,
+//        otherUserId: String,
+//        onSuccess: () -> Unit,
+//        onFailure: (String) -> Unit
+//    )
 
-    fun getRelatedProfiles(
-        id: String,
-        keyId1: String,
-        keyId2: String,
-        checkMatching: Boolean,
-        onResult: (MutableList<User>) -> Unit
+    fun loadProfile(
+        userId: String,
+        onSuccess: (User) -> Unit,
+        onFailure: (String) -> Unit
     )
+
+    fun loadAllProfiles(
+        onSuccess: (MutableList<User>) -> Unit,
+        onFailure: (String) -> Unit
+    )
+
+    fun loadFreshProfile(
+        id: String,
+        onSuccess: (User) -> Unit,
+        onFailure: (String) -> Unit
+    )
+
+    fun storeRelation(
+        relation: UserRelation,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    )
+
+    fun loadMatchingProfiles(
+        id: String,
+        onSuccess: (MutableList<User>) -> Unit,
+        onFailure: (String) -> Unit
+    )
+
+//    fun sendProtocol(relation: UserRelation)
 }

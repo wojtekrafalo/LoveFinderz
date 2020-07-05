@@ -36,6 +36,7 @@ class WelcomeFragment : Fragment(), WelcomeView {
     }
 
     override fun transitToProfile() {
-        findNavController().navigate(R.id.action_WelcomeFragment_to_ProfileFragment)
+        //TODO: Uncomment line below.
+//        findNavController().navigate(R.id.action_WelcomeFragment_to_ProfileFragment)
     }
 }

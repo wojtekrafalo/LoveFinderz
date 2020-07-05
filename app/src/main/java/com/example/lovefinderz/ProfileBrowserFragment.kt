@@ -29,11 +29,11 @@ class ProfileBrowserFragment : Fragment(), ProfileBrowserView {
 
         presenter.loadFreshProfile()
         profile_browser_like_button.onClick {
-            presenter.onRateTapped(true)
+            presenter.onRelationTapped(true)
         }
 
-        profile_browser_hate_button.onClick {
-            presenter.onRateTapped(false)
+        profile_browser_dislike_button.onClick {
+            presenter.onRelationTapped(false)
         }
     }
 
@@ -49,11 +49,11 @@ class ProfileBrowserFragment : Fragment(), ProfileBrowserView {
         //TODO("Not yet implemented")
     }
 
-    override fun showProfileLoadingError() {
+    override fun showProfileLoadingError(errorMessage: String) {
         //TODO: Display error, that there occurred an error while rating.
     }
 
-    override fun showProfileRatingError() {
+    override fun showRelationError(errorMessage: String) {
         //TODO: Display error, that there is no more users to display.
     }
 }

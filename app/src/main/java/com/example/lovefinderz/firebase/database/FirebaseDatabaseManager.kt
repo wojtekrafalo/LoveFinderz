@@ -3,19 +3,28 @@ package com.example.lovefinderz.firebase.database
 import android.util.Log
 import com.example.lovefinderz.model.User
 import com.example.lovefinderz.model.UserRelation
+import com.example.lovefinderz.model.UserRelationEntry
+import com.example.lovefinderz.protocol.UserSympathy
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 private const val KEY_DB_USER = "user"
+private const val KEY_DB_USERS = "users"
 private const val KEY_DB_RELATION = "relation"
 private const val KEY_EMAIL = "email"
 private const val KEY_USERNAME = "username"
+private const val KEY_PHOTO = "photo"
+private const val KEY_BIRTH = "dateOfBirth"
 private const val KEY_ID = "id"
-private const val KEY_ID1 = "id1"
-private const val KEY_ID2 = "id2"
+private const val KEY_THIS_USER = "thisUserId"
+private const val KEY_OTHER_USER = "otherUserId"
 private const val KEY_MATCH = "match"
+private const val KEY_RELATED_USERS = "related_users"
 
+private var firestoreDatabase = FirebaseFirestore.getInstance()
 private val HARDCODED_ID = "f74UBon50PVoKI4Z3aKanKDrAOs1"
 private val HARDCODED_USERNAME = "bartke"
 private val HARDCODED_EMAIL = "bartke@bartke.bartke"
@@ -23,190 +32,206 @@ private val HARDCODED_EMAIL = "bartke@bartke.bartke"
 class FirebaseDatabaseManager @Inject constructor(private val database: FirebaseDatabase) :
     FirebaseDatabaseInterface {
 
-    override fun createUser(id: String, name: String, email: String) {
-        val user = User(id, name, email)
-
-        //TODO: delete old database.reference:
-//        database.reference.child(KEY_USER).child(id).setValue(user)
-
-
-        val db = FirebaseFirestore.getInstance()
-        db.collection(KEY_DB_USER).add(user)
+    override fun storeUser(
+        id: String,
+        user: User,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    ) {
+        firestoreDatabase.collection(KEY_DB_USER).document(id).set(user)
             .addOnSuccessListener {
+                onSuccess()
                 Log.d("SUCCESS", "User added!!!")
             }
             .addOnFailureListener {
+                onFailure()
                 Log.d("FAILURE", "User not added!!!")
             }
-
     }
 
-    //TODO: Update following method. It makes the ProfileFragment to not working and loading data.
-    override fun getProfile(id: String, onResult: (User) -> Unit) {
+    private fun updateRelatedUserList(
+        relation: UserRelation,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        val errorMessage = "Server error while rating."
+        firestoreDatabase.collection(KEY_DB_USER)
+            .document(relation.thisUserId)
+            .update(KEY_RELATED_USERS, FieldValue.arrayUnion(relation.otherUserId))
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener {
+                onFailure(errorMessage)
+            }
+    }
 
-        val db = FirebaseFirestore.getInstance()
-        db.collection(KEY_DB_USER)
+    private fun loadRelatedUsers(
+        thisUserId: String,
+        onSuccess: (List<String>) -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        val errorMessage = "Server error while rating."
+        firestoreDatabase.collection(KEY_DB_USER)
+            .document(thisUserId)
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    for (document in task.result!!) {
-                        //TODO: Delete ass-prints.
-//                        Log.d("READ", "Map: " + document.data[KEY_ID].toString() + " => " + document.data)
-//                        Log.d("ID", id)
-//                        Log.d("READ", "Experiment: " + document.data[id].toString())
 
+                    val user = task.result?.toObject(User::class.java)!!
+                    val list = user.relatedUsers!!
+                    onSuccess(list)
 
-                        //TODO: Not the document.id. Sth else:
-                        val map = (document.data as HashMap<*, *>)
-//                        if (document.data[id] != null && ((document.data[id] as HashMap<*, *>)[KEY_ID] == id)) {
-                        if (map[KEY_ID] == id) {
-//                            Log.d("READ", "Condition is fine. Got to onResult()")
-                            val us = map[KEY_USERNAME].toString()
-                            val em = map[KEY_EMAIL].toString()
-                            val user = User(id, us, em)
-                            onResult(user)
-                        }
-                    }
                 } else {
-                    Log.w("ERROR", "Error getting documents.", task.exception)
+                    onFailure(errorMessage)
+                    Log.w("ERROR", errorMessage, task.exception)
                 }
             }
-
-        //TODO: Delete below old database using after assuring, all database stuff works:
-//        database.reference
-//            .child(KEY_USER)
-//            .child(id)
-//            .addValueEventListener(object : ValueEventListener {
-//                override fun onCancelled(error: DatabaseError) = Unit
-//
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    val user = snapshot.getValue(UserResponse::class.java)
-////                    val favoriteJokes = snapshot.child(KEY_FAVORITE).children
-////                        .map { it?.getValue(JokeResponse::class.java) }
-////                        .mapNotNull { it?.mapToJoke() }
-////                        ?: listOf()
-////
-////
-////                    user?.run { onResult(User(id, username, email, favoriteJokes)) }
-//                }
-//            })
     }
 
-    override fun getProfiles(onResult: (MutableList<User>) -> Unit) {
-        val db = FirebaseFirestore.getInstance()
-        db.collection(KEY_DB_USER)
+    override fun loadProfile(
+        userId: String,
+        onSuccess: (User) -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        val errorMessage = "Server error while getting profile."
+
+        firestoreDatabase.collection(KEY_DB_USER).document(userId)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+
+                    val user = task.result?.toObject(User::class.java)!!
+                    onSuccess(user)
+
+                } else {
+                    onFailure(errorMessage)
+                    Log.w("ERROR", errorMessage, task.exception)
+                }
+            }
+    }
+
+    override fun loadAllProfiles(
+        onSuccess: (MutableList<User>) -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        val errorMessage = "Server error while getting all users."
+
+        firestoreDatabase.collection(KEY_DB_USER)
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val list: MutableList<User> = ArrayList()
 
                     for (document in task.result!!) {
-                        val map = (document.data as HashMap<*, *>)
-                        val userId = map[KEY_ID].toString()
-                        val userUsername = map[KEY_USERNAME].toString()
-                        val userEmail = map[KEY_EMAIL].toString()
-                        val user = User(userId, userUsername, userEmail)
 
+                        val user = document.toObject(User::class.java)
                         list.add(user)
                     }
-                    onResult(list)
+                    onSuccess(list)
                 } else {
-                    //TODO: Add some exception handling to show in layout.
-                    Log.w("ERROR", "Error getting documents.", task.exception)
+                    Log.w("ERROR", "Error getting users.", task.exception)
+                    onFailure(errorMessage)
                 }
             }
     }
 
     //TODO: change structure of relation table to make operations more efficient.
-    override fun getFreshProfile(
+    override fun loadFreshProfile(
         id: String,
         onSuccess: (User) -> Unit,
-        onFailure: () -> Unit
+        onFailure: (String) -> Unit
     ) {
+        val errorMessage = "Server error. No profile found."
 //        val user = UserResponse(HARDCODED_ID, HARDCODED_USERNAME, HARDCODED_EMAIL)
 //        onResult(user)
 
-        getRelatedProfiles(id, KEY_ID1, KEY_ID2, false) { list1 ->
-            getRelatedProfiles(id, KEY_ID2, KEY_ID1, false) { list2 ->
-                list1.addAll(list2)
-                getProfiles { listAll ->
-                    for (user in listAll) {
-                        if (user.id != id && !list1.contains(user)) {
-                            onSuccess(user)
-                        }
+        this.loadRelatedUsers(id, { listRelated ->
+            this.loadAllProfiles({ listAll ->
+
+                for (user in listAll) {
+                    if (id != user.id && !listRelated.contains(user.id)) {
+                        onSuccess(user)
+                        break
                     }
-                    onFailure()
                 }
-            }
-        }
+                onFailure(errorMessage)
+            }, {
+                onFailure(it)
+            })
+        }, {
+            onFailure(it)
+        })
     }
 
-    //TODO: Test it.
-    override fun addRatedProfile(
-        idLiking: String,
-        idLiked: String,
-        isLiked: Boolean,
+    override fun storeRelation(
+        relation: UserRelation,
         onSuccess: () -> Unit,
-        onFailure: () -> Unit
+        onFailure: (String) -> Unit
     ) {
-        val relation = UserRelation(idLiking, idLiked, isLiked)
-        val db = FirebaseFirestore.getInstance()
-        db.collection(KEY_DB_RELATION).add(relation)
-            .addOnSuccessListener {
-                Log.d("SUCCESS", "Profile rated!!!")
+        sendProtocol(relation, {
+            this.updateRelatedUserList(relation, {
                 onSuccess()
-            }
-            .addOnFailureListener {
-                Log.d("FAILURE", "Error while rating!!!")
-                onFailure()
-            }
-    }
+            }, {
+                onFailure(it)
+            })
+        }, {
+            onFailure(it)
+        })
 
-    //TODO: Test it.
-    override fun getMatchedProfiles(id: String, onResult: (MutableList<User>) -> Unit) {
-
-        this.getRelatedProfiles(id, KEY_ID1, KEY_ID2, true) {
-            onResult(it)
-        }
-
-        this.getRelatedProfiles(id, KEY_ID2, KEY_ID1, true) {
-            onResult(it)
-        }
     }
 
 
-    override fun getRelatedProfiles(
-        id: String,
-        keyId1: String,
-        keyId2: String,
-        checkMatching: Boolean,
-        onResult: (MutableList<User>) -> Unit
+    //TODO: Use onSuccess and onFailure.
+    private fun sendProtocol(
+        relation: UserRelation,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
-
-        val db = FirebaseFirestore.getInstance()
-        val query = db.collection(KEY_DB_RELATION).whereEqualTo(keyId1, id)
-        if (checkMatching) {
-            query.whereEqualTo(KEY_MATCH, true)
-        }
-
-        query.get().addOnCompleteListener { task ->
-            val profiles: MutableList<User> = ArrayList()
-            if (task.isSuccessful) {
-                //TODO: Adjust selects to table in Firestore.
-                for (document in task.result!!) {
-
-                    val map = (document.data as HashMap<*, *>)
-                    val newId = map[keyId2].toString()
-
-                    this.getProfile(newId) {
-                        profiles.add(it)
-                    }
-                }
-                onResult(profiles)
-            } else {
-                //TODO: Add some handling of exception.
-                Log.w("ERROR", "Error getting matched first profiles.", task.exception)
-            }
-        }
+        val errorMessage = "Error while sending protocol."
+//        val protocol = UserSympathy(relation.thisUserId, relation.otherUserId)
+//
+//        if (relation.isLiked)
+//            protocol.like()
+//        else
+//            protocol.dislike()
     }
+
+    override fun loadMatchingProfiles(
+        id: String,
+        onSuccess: (MutableList<User>) -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        val errorMessage = "Server error while getting matched first profiles."
+
+        firestoreDatabase.collection(KEY_DB_RELATION).whereArrayContains(KEY_DB_USERS, id).get()
+            .addOnCompleteListener { task ->
+                val profiles: MutableList<User> = ArrayList()
+                if (task.isSuccessful) {
+                    for (document in task.result!!) {
+                        val relation = document.toObject(UserRelationEntry::class.java)
+                        val newId: String
+                        newId = if (relation.users.first() == id)
+                            relation.users[1]
+                        else
+                            relation.users.first()
+
+                        this.loadProfile(newId, {
+                            //TODO: onResult(it). Change signature of method: onResult: (User) -> Unit and run for each found matched profile.
+                            // It would work for loading matched profiles to recyclerView, but it won't work for comparing related profiles with all profiles in method doesRelationExist()
+                            profiles.add(it)
+                        }, {
+                            onFailure(it)
+                            Log.w("ERROR", it)
+                        })
+                    }
+                    onSuccess(profiles)
+                } else {
+                    onFailure(errorMessage)
+                    Log.w("ERROR", errorMessage, task.exception)
+                }
+            }
+
+    }
+
 }
