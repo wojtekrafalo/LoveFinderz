@@ -11,19 +11,18 @@ import java.security.InvalidParameterException
 import java.security.SecureRandom
 
 
-class UserSympathy(private val thisUserId: String, private val otherUserId: String) {
-    private val TAG = "UserSympathy"
-    fun like(onSuccess: () -> Unit, onFailure: () -> Unit) {
-        confess(true, onSuccess, onFailure)
+class UserSympathy(private val thisUserId: String, private val otherUserId: String, private val onSuccess: () -> Unit, private val onFailure: () -> Unit) {
+    fun like() {
+        confess(true)
     }
 
-    fun dislike(onSuccess: () -> Unit, onFailure: () -> Unit) {
-        confess(false, onSuccess, onFailure)
+    fun dislike() {
+        confess(false)
     }
 
     private val db = FirebaseFirestore.getInstance()
 
-    private fun confess(likes: Boolean, onSuccess: () -> Unit, onFailure: () -> Unit) {
+    private fun confess(likes: Boolean) {
         //Keys
         val a0 = generateCryptographicKey()
         val a1 = generateCryptographicKey()
@@ -80,13 +79,13 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
         val protocolDataRef = db.collection("protocol_data").document(id)
         protocolDataRef.get().addOnSuccessListener {
             if (it.exists()) {
-                Log.d(TAG, "insertOrUpdateProtocolData: empty" + it.toString())
+                Log.d(Companion.TAG, "insertOrUpdateProtocolData: empty" + it.toString())
             } else {
-                Log.d(TAG, "insertOrUpdateProtocolData: not empty" + it.toString())
+                Log.d(Companion.TAG, "insertOrUpdateProtocolData: not empty" + it.toString())
             }
         }.addOnFailureListener {
             Log.d(
-                TAG,
+                Companion.TAG,
                 "insertOrUpdateProtocolData: Error while updating protocol data: " + it.message
             )
         }
@@ -110,6 +109,10 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
     private fun generateId(): String {
         return if (orderOnUserIds()) thisUserId + otherUserId
         else otherUserId + thisUserId
+    }
+
+    companion object {
+        private const val TAG = "UserSympathy"
     }
 
 }
