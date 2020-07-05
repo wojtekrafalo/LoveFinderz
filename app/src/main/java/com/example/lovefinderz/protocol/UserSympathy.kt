@@ -7,23 +7,23 @@ import com.example.lovefinderz.firebase.database.FirebaseDatabaseManager_Factory
 
 import com.example.lovefinderz.model.ProtocolData
 import com.google.firebase.firestore.FirebaseFirestore
+import java.security.InvalidParameterException
 import java.security.SecureRandom
 
 
-
 class UserSympathy(private val thisUserId: String, private val otherUserId: String) {
-
-    fun like() {
-        confess(true)
+    private val TAG = "UserSympathy"
+    fun like(onSuccess: () -> Unit, onFailure: () -> Unit) {
+        confess(true, onSuccess, onFailure)
     }
 
-    fun dislike() {
-        confess(false)
+    fun dislike(onSuccess: () -> Unit, onFailure: () -> Unit) {
+        confess(false, onSuccess, onFailure)
     }
 
     private val db = FirebaseFirestore.getInstance()
 
-    private fun confess(likes:Boolean){
+    private fun confess(likes: Boolean, onSuccess: () -> Unit, onFailure: () -> Unit) {
         //Keys
         val a0 = generateCryptographicKey()
         val a1 = generateCryptographicKey()
@@ -40,31 +40,19 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
         val n = getN()
 
         val p = SecureRandom().nextInt()
-
+        //TODO make power
         var x = g.toBigDecimal()
         x = x.rem(n.toBigDecimal())
 
         val choiceKey = if (likes) a1 else a0
 
-        sendDataToServer(gc1, gc2, gc3, gc4, g, n, x.toInt(), choiceKey)
-        runListener()
-
-    }
-
-    private fun sendDataToServer(
-        gc1: String,
-        gc2: String,
-        gc3: String,
-        gc4: String,
-        g: Int,
-        n: Int,
-        x: Int,
-        choiceKey: String
-    ) {
         val gc = mutableListOf(gc1, gc2, gc3, gc4)
         gc.shuffle(SecureRandom())
-        val data = ProtocolData(listOf(thisUserId, otherUserId), gc, g, n, x, choiceKey)
+        val data = ProtocolData(listOf(thisUserId, otherUserId), gc, g, n, x.toInt(), choiceKey)
         insertOrUpdateProtocolData(data)
+
+        runListener()
+
     }
 
     private fun runListener() {
@@ -75,32 +63,56 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
         doIfDataExists(data, ::updateProtocolData, ::addProtocolData)
     }
 
-    private fun addProtocolData(data: ProtocolData){
+    private fun addProtocolData(data: ProtocolData) {
 
     }
 
-    private fun updateProtocolData(data: ProtocolData){
+    private fun updateProtocolData(data: ProtocolData) {
 
     }
 
-    private fun doIfDataExists(data:ProtocolData, onDataExists: (data:ProtocolData) -> Unit, onDataNotExists: (data:ProtocolData) -> Unit){
-        db.collection("protocol_data")
-            .whereIn("users", listOf(listOf(thisUserId, otherUserId), listOf(thisUserId, otherUserId)))
-            .get().addOnSuccessListener {
-                if (it.isEmpty){
-                    print("pusto")
-                }else{
-                    print(it)
-                }
-            }.addOnFailureListener{
-                Log.d("TAG", "insertOrUpdateProtocolData: Error while updating protocol data: "+it.message)
+    private fun doIfDataExists(
+        data: ProtocolData,
+        onDataExists: (data: ProtocolData) -> Unit,
+        onDataNotExists: (data: ProtocolData) -> Unit
+    ) {
+        val id = generateId()
+        val protocolDataRef = db.collection("protocol_data").document(id)
+        protocolDataRef.get().addOnSuccessListener {
+            if (it.exists()) {
+                Log.d(TAG, "insertOrUpdateProtocolData: empty" + it.toString())
+            } else {
+                Log.d(TAG, "insertOrUpdateProtocolData: not empty" + it.toString())
             }
+        }.addOnFailureListener {
+            Log.d(
+                TAG,
+                "insertOrUpdateProtocolData: Error while updating protocol data: " + it.message
+            )
+        }
+    }
+
+    /**
+     * Returns true if thisUserId is before otherUserId in order and false if otherUserId is before thisUserId
+     */
+    private fun orderOnUserIds(): Boolean {
+        var i = 0
+        while (true) {
+            if (thisUserId.length >= i && otherUserId.length >= i) throw InvalidParameterException("Ids can not be equal!")
+            if (thisUserId.length >= i) return true
+            if (otherUserId.length >= i) return false
+            if (thisUserId[i].toInt() < otherUserId[i].toInt()) return true
+            if (thisUserId[i].toInt() > otherUserId[i].toInt()) return false
+            i++
+        }
+    }
+
+    private fun generateId(): String {
+        return if (orderOnUserIds()) thisUserId + otherUserId
+        else otherUserId + thisUserId
     }
 
 }
-
-
-
 
 
 /*
