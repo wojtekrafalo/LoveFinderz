@@ -23,12 +23,10 @@ fun hash(source:String): String {
 
 }
 
-//TODO - it can be upgraded with knowledge contained here: https://stackoverflow.com/questions/49340005/encrypt-decrypt-string-kotlin
-//https://www.raywenderlich.com/778533-encryption-tutorial-for-android-getting-started
 fun encrypt(key:String, source: String): String {
-    println(key)
 
-    val keyAes = SecretKeySpec(key.hexStringToByteArray(), "AES")
+
+    /*val keyAes = SecretKeySpec(key.hexStringToByteArray(), "AES")
     val sourceBytes = source.toByteArray()
 
 
@@ -37,12 +35,13 @@ fun encrypt(key:String, source: String): String {
     val encrypted = cipher.doFinal(sourceBytes)
 
 
-    return encrypted.toString()
+    return encrypted.toString()*/
+    return source
 }
 
 fun decrypt(key:String, source: String): String {
-    println(key)
-    val keyAes = SecretKeySpec(key.hexStringToByteArray(), "AES")
+
+    /*val keyAes = SecretKeySpec(key.hexStringToByteArray(), "AES")
     val sourceBytes = source.toByteArray()
 
     val cipher = Cipher.getInstance("AES/GCM/NoPadding")
@@ -50,7 +49,8 @@ fun decrypt(key:String, source: String): String {
     val decrypted = cipher.doFinal(sourceBytes)
 
 
-    return decrypted.toString()
+    return decrypted.toString()*/
+    return source
 }
 
 fun getG(): Int {

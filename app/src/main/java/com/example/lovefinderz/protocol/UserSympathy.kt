@@ -1,13 +1,17 @@
 package com.example.lovefinderz.protocol
 
+import android.util.Log
 import com.example.lovefinderz.common.*
+
+import com.example.lovefinderz.firebase.database.FirebaseDatabaseManager_Factory
+
+import com.example.lovefinderz.model.ProtocolData
+import com.google.firebase.firestore.FirebaseFirestore
+import java.security.InvalidParameterException
 import java.security.SecureRandom
-import java.util.*
-import kotlin.math.pow
 
 
-class UserSympathy(private val thisUserId: String, private val otherUserId: String) {
-
+class UserSympathy(private val thisUserId: String, private val otherUserId: String, private val onSuccess: () -> Unit, private val onFailure: () -> Unit) {
     fun like() {
         confess(true)
     }
@@ -16,8 +20,9 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
         confess(false)
     }
 
-    private fun confess(likes:Boolean){
-        // Grabled circuit
+    private val db = FirebaseFirestore.getInstance()
+
+    private fun confess(likes: Boolean) {
         //Keys
         val a0 = generateCryptographicKey()
         val a1 = generateCryptographicKey()
@@ -34,37 +39,83 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
         val n = getN()
 
         val p = SecureRandom().nextInt()
-
-        val x = g.toBigDecimal().pow(p).rem(n.toBigDecimal())
+        //TODO make power
+        var x = g.toBigDecimal()
+        x = x.rem(n.toBigDecimal())
 
         val choiceKey = if (likes) a1 else a0
 
-        sendDataToServer(gc1, gc2, gc3, gc4, g, n, x.toInt(), choiceKey)
+        val gc = mutableListOf(gc1, gc2, gc3, gc4)
+        gc.shuffle(SecureRandom())
+        val data = ProtocolData(listOf(thisUserId, otherUserId), gc, g, n, x.toInt(), choiceKey)
+        insertOrUpdateProtocolData(data)
+
         runListener()
 
     }
 
-    private fun sendDataToServer(
-        gc1: String,
-        gc2: String,
-        gc3: String,
-        gc4: String,
-        g: Int,
-        n: Int,
-        x: Int,
-        choiceKey: String
-    ) {
-        TODO("Not yet implemented")
+    private fun runListener() {
+
     }
 
-    private fun runListener() {
-        TODO("Not yet implemented")
+    private fun insertOrUpdateProtocolData(data: ProtocolData) {
+        doIfDataExists(data, ::updateProtocolData, ::addProtocolData)
+    }
+
+    private fun addProtocolData(data: ProtocolData) {
+
+    }
+
+    private fun updateProtocolData(data: ProtocolData) {
+
+    }
+
+    private fun doIfDataExists(
+        data: ProtocolData,
+        onDataExists: (data: ProtocolData) -> Unit,
+        onDataNotExists: (data: ProtocolData) -> Unit
+    ) {
+        val id = generateId()
+        val protocolDataRef = db.collection("protocol_data").document(id)
+        protocolDataRef.get().addOnSuccessListener {
+            if (it.exists()) {
+                Log.d(Companion.TAG, "insertOrUpdateProtocolData: empty" + it.toString())
+            } else {
+                Log.d(Companion.TAG, "insertOrUpdateProtocolData: not empty" + it.toString())
+            }
+        }.addOnFailureListener {
+            Log.d(
+                Companion.TAG,
+                "insertOrUpdateProtocolData: Error while updating protocol data: " + it.message
+            )
+        }
+    }
+
+    /**
+     * Returns true if thisUserId is before otherUserId in order and false if otherUserId is before thisUserId
+     */
+    private fun orderOnUserIds(): Boolean {
+        var i = 0
+        while (true) {
+            if (thisUserId.length >= i && otherUserId.length >= i) throw InvalidParameterException("Ids can not be equal!")
+            if (thisUserId.length >= i) return true
+            if (otherUserId.length >= i) return false
+            if (thisUserId[i].toInt() < otherUserId[i].toInt()) return true
+            if (thisUserId[i].toInt() > otherUserId[i].toInt()) return false
+            i++
+        }
+    }
+
+    private fun generateId(): String {
+        return if (orderOnUserIds()) thisUserId + otherUserId
+        else otherUserId + thisUserId
+    }
+
+    companion object {
+        private const val TAG = "UserSympathy"
     }
 
 }
-
-
-
 
 
 /*
