@@ -1,9 +1,14 @@
 package com.example.lovefinderz.protocol
 
+import android.util.Log
 import com.example.lovefinderz.common.*
+
+import com.example.lovefinderz.firebase.database.FirebaseDatabaseManager_Factory
+
+import com.example.lovefinderz.model.ProtocolData
+import com.google.firebase.firestore.FirebaseFirestore
 import java.security.SecureRandom
-import java.util.*
-import kotlin.math.pow
+
 
 
 class UserSympathy(private val thisUserId: String, private val otherUserId: String) {
@@ -16,8 +21,9 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
         confess(false)
     }
 
+    private val db = FirebaseFirestore.getInstance()
+
     private fun confess(likes:Boolean){
-        // Grabled circuit
         //Keys
         val a0 = generateCryptographicKey()
         val a1 = generateCryptographicKey()
@@ -35,7 +41,8 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
 
         val p = SecureRandom().nextInt()
 
-        val x = g.toBigDecimal().pow(p).rem(n.toBigDecimal())
+        var x = g.toBigDecimal()
+        x = x.rem(n.toBigDecimal())
 
         val choiceKey = if (likes) a1 else a0
 
@@ -54,11 +61,40 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
         x: Int,
         choiceKey: String
     ) {
-        TODO("Not yet implemented")
+        val gc = mutableListOf(gc1, gc2, gc3, gc4)
+        gc.shuffle(SecureRandom())
+        val data = ProtocolData(listOf(thisUserId, otherUserId), gc, g, n, x, choiceKey)
+        insertOrUpdateProtocolData(data)
     }
 
     private fun runListener() {
-        TODO("Not yet implemented")
+
+    }
+
+    private fun insertOrUpdateProtocolData(data: ProtocolData) {
+        doIfDataExists(data, ::updateProtocolData, ::addProtocolData)
+    }
+
+    private fun addProtocolData(data: ProtocolData){
+
+    }
+
+    private fun updateProtocolData(data: ProtocolData){
+
+    }
+
+    private fun doIfDataExists(data:ProtocolData, onDataExists: (data:ProtocolData) -> Unit, onDataNotExists: (data:ProtocolData) -> Unit){
+        db.collection("protocol_data")
+            .whereIn("users", listOf(listOf(thisUserId, otherUserId), listOf(thisUserId, otherUserId)))
+            .get().addOnSuccessListener {
+                if (it.isEmpty){
+                    print("pusto")
+                }else{
+                    print(it)
+                }
+            }.addOnFailureListener{
+                Log.d("TAG", "insertOrUpdateProtocolData: Error while updating protocol data: "+it.message)
+            }
     }
 
 }
