@@ -9,15 +9,15 @@ class WelcomePresenterImpl @Inject constructor(
     private val authenticationInterface: FirebaseAuthenticationInterface
 ) : WelcomePresenter {
 
-  private lateinit var view: WelcomeView
+    private lateinit var view: WelcomeView
 
-  override fun setView(view: WelcomeView) {
-    this.view = view
-  }
-
-  override fun transitLoggedUser() {
-    if (authenticationInterface.getUserId().isNotBlank()) {
-      view.transitToProfile()
+    override fun setView(view: WelcomeView) {
+        this.view = view
     }
-  }
+
+    override fun transitLoggedUser() {
+        if (authenticationInterface.getUserId().isNotBlank()) {
+            view.transitToProfile()
+        }
+    }
 }

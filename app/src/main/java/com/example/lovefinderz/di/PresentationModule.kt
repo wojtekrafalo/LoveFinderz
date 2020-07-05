@@ -21,5 +21,11 @@ abstract class PresentationModule {
   abstract fun profilePresenter(profilePresenterImpl: ProfilePresenterImpl): ProfilePresenter
 
   @Binds
+  abstract fun profileBrowserPresenter(profileBrowserPresenterImpl: ProfileBrowserPresenterImpl): ProfileBrowserPresenter
+
+  @Binds
+  abstract fun matchedProfilePresenter(matchedProfilePresenterImpl: MatchedProfilePresenterImpl): MatchedProfilePresenter
+
+  @Binds
   abstract fun welcomePresenter(welcomePresenterImpl: WelcomePresenterImpl): WelcomePresenter
 }

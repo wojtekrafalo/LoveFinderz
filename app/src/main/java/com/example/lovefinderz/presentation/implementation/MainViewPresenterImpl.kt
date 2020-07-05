@@ -24,11 +24,23 @@ class MainViewPresenterImpl @Inject constructor(
   }
 
   override fun onHomeTapped() {
-    //TODO: load ProfileFragment
+    authentication.transitIfLogged{
+      view.onHomeSuccess()
+    }
   }
 
   override fun onBrowseTapped() {
     //TODO: load BrowseProfileFragment
+    authentication.transitIfLogged{
+      view.onBrowseSuccess()
+    }
+  }
+
+  override fun onMatchesTapped() {
+    //TODO: Add new window to show matches of specific user.
+    authentication.transitIfLogged{
+      view.onMatchesTapped()
+    }
   }
 }
 

@@ -40,4 +40,6 @@
     <string name="profile_label_change_login">Edit login</string>
     <string name="register_success">Successfully registered. Now sign in.</string>
     <string name="log_out_success">Successfully signed out.</string>
+    <string name="action_show_matches">Show matches</string>
+    <string name="matched_profiles">Your matched profiles</string>
 </resources>

@@ -90,4 +90,18 @@
         android:label="@string/profile_browser"
         tools:layout="@layout/fragment_profile_browser">
     </fragment>
+
+    <fragment
+        android:id="@+id/MatchedProfileFragment"
+        android:name="com.example.lovefinderz.MatchedProfileFragment"
+        android:label="@string/matched_profiles"
+        tools:layout="@layout/fragment_matched_profile">
+
+        <action
+            android:id="@+id/action_MatchedProfileFragment_to_ProfileFragment"
+            app:destination="@id/ProfileFragment" />
+    </fragment>
+
+
+
 </navigation>

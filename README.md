@@ -6,6 +6,5 @@ It gives a feature to opt between various users and mark the ones you like. If t
 Project not finished.
 
 TODO:
-+ Firebase server to store each user data and their preferences.
 + Encryption mode.
-+ Interface.
++ Documentation

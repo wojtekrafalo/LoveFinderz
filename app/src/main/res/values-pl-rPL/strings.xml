@@ -38,4 +38,6 @@
     <string name="profile_label_change_photo">Dodaj zdjęcie</string>
     <string name="log_out_success">Pomyślnie wylogowano.</string>
     <string name="register_success">Pomyślnie zarejestrowano. Możesz się już zalogować.</string>
+    <string name="action_show_matches">Pokaż dopasowania</string>
+    <string name="matched_profiles">Twoje dopasowania</string>
 </resources>

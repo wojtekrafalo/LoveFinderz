@@ -17,5 +17,9 @@ interface AppComponent {
 
   fun profilePresenter(): ProfilePresenter
 
+  fun profileBrowserPresenter(): ProfileBrowserPresenter
+
+  fun matchedProfilePresenter(): MatchedProfilePresenter
+
   fun welcomePresenter(): WelcomePresenter
 }

@@ -11,4 +11,6 @@ interface FirebaseAuthenticationInterface {
     fun getUserName(): String
 
     fun logOut(onResult: () -> Unit)
+
+    fun transitIfLogged(transition: () -> Unit)
 }

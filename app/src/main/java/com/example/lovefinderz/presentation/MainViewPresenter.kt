@@ -10,4 +10,5 @@ interface MainViewPresenter : BasePresenter<MainView> {
 
   fun onBrowseTapped()
 
+  fun onMatchesTapped()
 }

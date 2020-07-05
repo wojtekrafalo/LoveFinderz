@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity(), MainView {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
@@ -39,10 +38,17 @@ class MainActivity : AppCompatActivity(), MainView {
             }
             R.id.action_home -> {
                 presenter.onHomeTapped()
-                Snackbar.make(window.decorView, "Pressed 'Home'", Snackbar.LENGTH_LONG)
+//                Snackbar.make(window.decorView, "Pressed 'Home'", Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null).show()
+                true
+            }
+            R.id.action_show_matches -> {
+                presenter.onMatchesTapped()
+                Snackbar.make(window.decorView, "Pressed 'Show matches'", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
                 true
             }
+            //TODO: Repair it. Crashes the app.
             R.id.action_log_out -> {
                 presenter.onLogOutTapped()
                 true
@@ -75,6 +81,14 @@ class MainActivity : AppCompatActivity(), MainView {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.nav_host_fragment, ProfileBrowserFragment())
+            .commit()
+    }
+
+    override fun onMatchesTapped() {
+        //TODO:Add loading of matches.
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.nav_host_fragment, MatchedProfileFragment())
             .commit()
     }
 }

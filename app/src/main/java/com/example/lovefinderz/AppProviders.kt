@@ -11,4 +11,8 @@ fun registerPresenter() = component().registerPresenter()
 
 fun profilePresenter() = component().profilePresenter()
 
+fun profileBrowserPresenter() = component().profileBrowserPresenter()
+
+fun matchedProfilePresenter() = component().matchedProfilePresenter()
+
 fun welcomePresenter() = component().welcomePresenter()
