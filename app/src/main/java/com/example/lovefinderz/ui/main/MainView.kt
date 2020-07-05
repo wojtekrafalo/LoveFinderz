@@ -6,4 +6,6 @@ interface MainView {
     fun onHomeSuccess()
 
     fun onBrowseSuccess()
+
+    fun onMatchesTapped()
 }

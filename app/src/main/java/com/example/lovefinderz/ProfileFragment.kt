@@ -18,13 +18,6 @@ class ProfileFragment : Fragment(), ProfileView {
 
     private val presenter by lazy { profilePresenter() }
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.fragment_profile)
-//        setSupportActionBar(findViewById(R.id.toolbar))
-//
-//    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,13 +31,14 @@ class ProfileFragment : Fragment(), ProfileView {
 
         presenter.getProfile()
 
-        //TODO: add using camera.
         profile_button_change_photo.onClick {
+            //TODO: add using camera.
             Log.d("EDIT", "Edit photo of a user")
         }
 
-        //TODO: add dialog window to edit and update database.
         profile_button_change_login.onClick {
+            //TODO: add dialog window to edit and update database, but I don't have to update authentication table.
+            //TODO: Maybe add possibility to change password.
             Log.d("EDIT", "Edit login of user. Add a dialog!!")
         }
 
@@ -62,6 +56,7 @@ class ProfileFragment : Fragment(), ProfileView {
     }
 
     override fun openWelcome() {
+        //TODO: Add 'Log Out' button on ProfileFragment or simply delete this function.
         findNavController().navigate(R.id.action_ProfileFragment_to_WelcomeFragment)
     }
 }

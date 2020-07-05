@@ -19,7 +19,8 @@ class ProfilePresenterImpl @Inject constructor(
 
   override fun getProfile() {
     databaseInterface.getProfile(authenticationInterface.getUserId()) {
-      val userId = authenticationInterface.getUserId()
+        //TODO: Id is unnecessary.
+//      val userId = authenticationInterface.getUserId()
 
       view.showUsername(it.username)
       view.showEmail(it.email)
@@ -27,6 +28,4 @@ class ProfilePresenterImpl @Inject constructor(
 //      it.favoriteUsers?.count { it.id == userId }?.let { it1 -> view.showNumberOfJokes(it1) }
     }
   }
-
-  override fun logOut() = authenticationInterface.logOut { view.openWelcome() }
 }

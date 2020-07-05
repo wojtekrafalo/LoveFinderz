@@ -18,8 +18,8 @@ class WelcomeFragment : Fragment(), WelcomeView {
     private val presenter by lazy { welcomePresenter() }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         presenter.setView(this)
 
@@ -36,7 +36,6 @@ class WelcomeFragment : Fragment(), WelcomeView {
     }
 
     override fun transitToProfile() {
-        //TODO: Uncomment line below:
-//        findNavController().navigate(R.id.action_WelcomeFragment_to_ProfileFragment)
+        findNavController().navigate(R.id.action_WelcomeFragment_to_ProfileFragment)
     }
 }
