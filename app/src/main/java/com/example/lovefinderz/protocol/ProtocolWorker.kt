@@ -2,6 +2,7 @@ package com.example.lovefinderz.protocol
 
 import android.content.Context
 import androidx.concurrent.futures.CallbackToFutureAdapter
+import androidx.work.Data
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -34,13 +35,28 @@ class ProtocolWorker(context: Context, workerParams: WorkerParameters) : Listena
     }
 
     companion object{
-        const val USER_1_ID = "user1id"
-        const val USER_2_ID = "user2id"
-        const val P = "p"
-        const val LIKES = "likes"
-        const val MY_CHOICE_KEY = "myChoiceKey"
-        const val OTHERS_KEY_0 = "othersKey0"
-        const val OTHERS_KEY_1 = "othersKey1"
-        const val MESSAGING_KEY_BASE = "messagingKeyBase" //X or Y
+        private const val USER_1_ID = "user1id"
+        private const val USER_2_ID = "user2id"
+        private const val P = "p"
+        private const val LIKES = "likes"
+        private const val MY_CHOICE_KEY = "myChoiceKey"
+        private const val OTHERS_KEY_0 = "othersKey0"
+        private const val OTHERS_KEY_1 = "othersKey1"
+        private const val MESSAGING_KEY_BASE = "messagingKeyBase" //X or Y
+
+        fun createInputDataProtocolWorker(user1id:String, user2id:String, p:Int?, likes: Boolean, myChoiceKey:String, othersKey0:String, othersKey1: String, messagingKeyBase:Int?): Data {
+            val builder = Data.Builder()
+            builder.putString(USER_1_ID, user1id)
+            builder.putString(USER_2_ID, user2id)
+            builder.putString(MY_CHOICE_KEY, myChoiceKey)
+            builder.putString(OTHERS_KEY_0, othersKey0)
+            builder.putString(OTHERS_KEY_1, othersKey1)
+            builder.putBoolean(LIKES, likes)
+            p?.let { builder.putInt(P, p) }
+            messagingKeyBase?.let { builder.putInt(MESSAGING_KEY_BASE, messagingKeyBase) }
+            return builder.build()
+        }
     }
+
+
 }

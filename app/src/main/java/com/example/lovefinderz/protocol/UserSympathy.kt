@@ -2,6 +2,7 @@ package com.example.lovefinderz.protocol
 
 import android.content.Context
 import android.util.Log
+import androidx.work.Data
 
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -18,14 +19,9 @@ import java.security.SecureRandom
 
 class UserSympathy(private val thisUserId: String, private val otherUserId: String, private val onSuccess: () -> Unit = {}, private val onFailure: () -> Unit = {}, private val context:Context) {
     private val recordId = generateId(thisUserId, otherUserId)
-    private var p: Int = 0
     private val db = FirebaseFirestore.getInstance()
-    private var myChoiceKey:String? = null
 
-    private lateinit var othersChoiceKey:String
-    private lateinit var messagingKey:String
     private var likes = false
-    private lateinit var garbledCircuit:List<String>
 
     fun like() {
         confess(true)
@@ -48,8 +44,8 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
             if (it.exists()) {
                 Log.d(Companion.TAG, "initializeProtocol: ProtocolData Record found")
                 val oldData = it.toObject(ProtocolData::class.java)!!
-                if(myChoiceKey != null  || oldData.firstUserChoiceKey != myChoiceKey){
-                    secondPartOfProtocol(protocolDataRef, oldData.g!!, oldData.n!!, oldData.x!!)
+                if(oldData.initializatorId != thisUserId){
+                    secondPartOfProtocol(protocolDataRef, oldData.g!!, oldData.n!!, oldData.x!!, likes, thisUserId, otherUserId, onFailure, onSuccess)
                 }
                 else{
                     onFailure()
@@ -57,7 +53,7 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
 
             } else {
                 Log.d(Companion.TAG, "initializeProtocol: ProtocolData Record not found")
-                firstPartOfProtocol(protocolDataRef)
+                firstPartOfProtocol(protocolDataRef, likes, thisUserId, otherUserId, onFailure, onSuccess)
             }
         }.addOnFailureListener {
             Log.d(Companion.TAG, "initializeProtocol: Error while updating protocol data: " + it.message)
@@ -65,72 +61,7 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
         }
     }
 
-    private fun firstPartOfProtocol(protocolDataRef: DocumentReference) {
 
-        //Keys
-        val a0 = generateCryptographicKey()
-        val a1 = generateCryptographicKey()
-        val b0 = generateCryptographicKey()
-        val b1 = generateCryptographicKey()
-
-        // Generate garbled circuit
-        val gc1 = encrypt(a0, encrypt(b0, "0"))
-        val gc2 = encrypt(a1, encrypt(b0, "0"))
-        val gc3 = encrypt(a0, encrypt(b1, "0"))
-        val gc4 = encrypt(a1, encrypt(b1, "1"))
-
-        val g = getG()
-        val n = getN()
-
-        p = getRandomPositiveVal()
-
-        val x = g.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger())
-
-        val choiceKey = if (likes) a1 else a0
-        myChoiceKey = choiceKey
-
-        val gc = mutableListOf(gc1, gc2, gc3, gc4)
-        gc.shuffle(SecureRandom())
-        val data = ProtocolData(listOf(thisUserId, otherUserId), gc, g, n, x.toInt(), choiceKey)
-
-        protocolDataRef.set(data).addOnSuccessListener {
-            Log.d(Companion.TAG, "firstPartOfProtocol: Data added")
-            onSuccess()
-        }.addOnFailureListener{
-            Log.d(Companion.TAG, "firstPartOfProtocol: Data not added")
-            onFailure()
-        }
-        //TODO?? save data
-        //TODO run listener
-    }
-
-
-    private fun secondPartOfProtocol(
-        protocolDataRef: DocumentReference,
-        g: Int,
-        n: Int,
-        x: Int
-    ) {
-        p = getRandomPositiveVal()
-
-        val y = if (likes){
-            g.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger())
-        }else{
-            g.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).times(x.toBigInteger()).rem(n.toBigInteger())
-        }
-        messagingKey = hash(x.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).toString())
-
-
-        protocolDataRef.update("y", y.toInt()).addOnSuccessListener {
-            Log.d(Companion.TAG, "secondPartOfProtocol: Data added")
-            onSuccess()
-        }.addOnFailureListener{
-            Log.d(Companion.TAG, "secondPartOfProtocol: Data added")
-            onFailure()
-        }
-        //TODO?? save data
-        //TODO run listener
-    }
 
     private fun saveKey(key: String, value: String) {
         //TODO?? use existing id
