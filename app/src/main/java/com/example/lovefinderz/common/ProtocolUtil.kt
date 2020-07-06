@@ -108,7 +108,7 @@ fun fourthPartOfProtocol(myKey:String, othersKey:String, data: ProtocolData, thi
     for(gc in data.gc){
         val out = decrypt(othersKey, decrypt(myKey, gc))
         if (out=="1" || out == "0"){
-            val relation = UserRelationEntry("", listOf(thisUserId, otherUserId))
+            val relation = UserRelationEntry(listOf(thisUserId, otherUserId))
             FirebaseFirestore.getInstance().collection("relation").add(relation).addOnSuccessListener { onSuccess() }.addOnFailureListener{onFailure()}
         }
     }
