@@ -18,8 +18,8 @@ class MatchedProfilePresenterImpl @Inject constructor(
     }
 
     override fun getMatchedProfiles() {
-        databaseInterface.loadMatchingProfiles(authenticationInterface.getUserId(), { profiles ->
-            view.loadMatchedProfiles(profiles)
+        databaseInterface.loadMatchingProfiles(authenticationInterface.getUserId(), { profile ->
+            view.loadMatchedProfile(profile)
         }, {
             view.showErrorMessage(it)
         })

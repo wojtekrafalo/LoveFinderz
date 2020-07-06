@@ -5,18 +5,18 @@ import com.example.lovefinderz.common.isPasswordValid
 import com.example.lovefinderz.firebase.authentication.FirebaseAuthenticationInterface
 import com.example.lovefinderz.model.LoginRequest
 import com.example.lovefinderz.presentation.LoginPresenter
-import com.example.lovefinderz.ui.login.LoginView
+import com.example.lovefinderz.ui.login.LogInView
 import javax.inject.Inject
 
 class LoginPresenterImpl @Inject constructor(
     private val authentication: FirebaseAuthenticationInterface
 ) : LoginPresenter {
 
-  private lateinit var view: LoginView
+  private lateinit var view: LogInView
 
   private val loginRequest = LoginRequest()
 
-  override fun setView(view: LoginView) {
+  override fun setView(view: LogInView) {
     this.view = view
   }
 

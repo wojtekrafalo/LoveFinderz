@@ -15,7 +15,7 @@
     <string name="hello_first_fragment">Hello to LoveFinderrz</string>
     <string name="hello_second_fragment">Hello second fragment.</string>
     <string name="error_title">Error of title</string>
-    <string name="error_message">General error</string>
+    <string name="error_message">Error</string>
     <string name="general_positive_button">OK</string>
     <string name="cancel">Cancel</string>
     <string name="username">Username</string>

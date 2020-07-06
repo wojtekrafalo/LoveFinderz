@@ -1,4 +1,4 @@
-package com.example.lovefinderz
+package com.example.lovefinderz.ui.register
 
 import android.os.Bundle
 import android.util.Log
@@ -7,10 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.example.lovefinderz.R
 import com.example.lovefinderz.common.onClick
 import com.example.lovefinderz.common.onTextChanged
-import com.example.lovefinderz.ui.register.RegisterView
-import com.google.android.material.snackbar.Snackbar
+import com.example.lovefinderz.common.showInfoDialog
+import com.example.lovefinderz.registerPresenter
 import kotlinx.android.synthetic.main.fragment_register.*
 
 /**
@@ -31,8 +32,6 @@ class RegisterFragment : Fragment(), RegisterView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-//        register_label_error.error = ""
 
         register_edit_text_login.onTextChanged {presenter.onUsernameChanged(it) }
         register_edit_text_email.onTextChanged { presenter.onEmailChanged(it) }
@@ -81,10 +80,6 @@ class RegisterFragment : Fragment(), RegisterView {
 
     //TODO: Make a modal pop up window with information instead of snackbar.
     private fun showMessageDialog(message:String) {
-        activity?.window?.decorView?.let {
-            Snackbar.make(it, message, Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-
-        }
+        showInfoDialog(this.requireContext(), message)
     }
 }

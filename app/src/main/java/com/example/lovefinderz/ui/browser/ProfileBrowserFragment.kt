@@ -1,11 +1,15 @@
-package com.example.lovefinderz
+package com.example.lovefinderz.ui.browser
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import com.example.lovefinderz.R
 import com.example.lovefinderz.common.onClick
+import com.example.lovefinderz.common.showInfoDialog
+import com.example.lovefinderz.profileBrowserPresenter
 import com.example.lovefinderz.ui.browser.ProfileBrowserView
 import kotlinx.android.synthetic.main.fragment_profile_browser.*
 
@@ -46,14 +50,17 @@ class ProfileBrowserFragment : Fragment(), ProfileBrowserView {
     }
 
     override fun showAge(dateOfBirth: String) {
-        //TODO("Not yet implemented")
+        //TODO: add field to show age.
     }
 
     override fun showProfileLoadingError(errorMessage: String) {
-        //TODO: Display error, that there occurred an error while rating.
+        showInfoDialog(this.requireContext(), errorMessage)
+        profile_browser_image.isVisible = false
+        profile_browser_login_layout.isVisible = false
+        profile_browser_buttons_layout.isVisible = false
     }
 
     override fun showRelationError(errorMessage: String) {
-        //TODO: Display error, that there is no more users to display.
+        showInfoDialog(this.requireContext(), errorMessage)
     }
 }

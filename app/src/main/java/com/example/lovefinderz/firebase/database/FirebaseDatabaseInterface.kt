@@ -2,7 +2,6 @@ package com.example.lovefinderz.firebase.database
 
 import com.example.lovefinderz.model.User
 import com.example.lovefinderz.model.UserRelation
-import java.util.*
 
 
 interface FirebaseDatabaseInterface {
@@ -28,7 +27,7 @@ interface FirebaseDatabaseInterface {
     )
 
     fun loadAllProfiles(
-        onSuccess: (MutableList<User>) -> Unit,
+        onSuccess: (List<User>) -> Unit,
         onFailure: (String) -> Unit
     )
 
@@ -46,7 +45,7 @@ interface FirebaseDatabaseInterface {
 
     fun loadMatchingProfiles(
         id: String,
-        onSuccess: (MutableList<User>) -> Unit,
+        onSuccess: (User) -> Unit,
         onFailure: (String) -> Unit
     )
 

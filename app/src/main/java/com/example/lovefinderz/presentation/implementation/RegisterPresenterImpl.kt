@@ -5,12 +5,13 @@ import com.example.lovefinderz.firebase.authentication.FirebaseAuthenticationInt
 import com.example.lovefinderz.firebase.database.FirebaseDatabaseInterface
 import com.example.lovefinderz.model.RegisterRequest
 import com.example.lovefinderz.model.User
+import com.example.lovefinderz.model.UserDateOfBirth
 import com.example.lovefinderz.presentation.RegisterPresenter
 import com.example.lovefinderz.ui.register.RegisterView
 import java.util.*
 import javax.inject.Inject
 
-private val DATE_OF_BIRTH = GregorianCalendar(1800, 1, 1)
+private val DATE_OF_BIRTH = UserDateOfBirth(1800, 1, 1)
 
 class RegisterPresenterImpl @Inject constructor(
     private val database: FirebaseDatabaseInterface,
@@ -58,7 +59,6 @@ class RegisterPresenterImpl @Inject constructor(
     }
 
     override fun onRegisterTapped() {
-        println("BreakPoint")
 
         val isUsernameValid = isUsernameValid(userData.username)
         val isEmailValid = isEmailValid(userData.email)
@@ -72,13 +72,13 @@ class RegisterPresenterImpl @Inject constructor(
                 onRegisterResult(isSuccessful, username, email)
             }
         } else {
-            if (isUsernameValid)
+            if (!isUsernameValid)
                 view.showUsernameError()
-            if (isEmailValid)
+            if (!isEmailValid)
                 view.showEmailError()
-            if (isPasswordValid)
+            if (!isPasswordValid)
                 view.showPasswordError()
-            if (arePasswordsSame)
+            if (!arePasswordsSame)
                 view.showPasswordMatchingError()
         }
     }
@@ -101,7 +101,7 @@ class RegisterPresenterImpl @Inject constructor(
     private fun createUser(
         username: String,
         email: String,
-        dateOfBirth: GregorianCalendar,
+        dateOfBirth: UserDateOfBirth,
         onSuccess: () -> Unit,
         onFailure: () -> Unit
     ) {

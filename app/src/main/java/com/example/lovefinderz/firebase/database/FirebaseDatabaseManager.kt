@@ -1,6 +1,7 @@
 package com.example.lovefinderz.firebase.database
 
 import android.util.Log
+import com.example.lovefinderz.common.parseListOfUsers
 import com.example.lovefinderz.model.User
 import com.example.lovefinderz.model.UserRelation
 import com.example.lovefinderz.model.UserRelationEntry
@@ -22,7 +23,7 @@ private const val KEY_ID = "id"
 private const val KEY_THIS_USER = "thisUserId"
 private const val KEY_OTHER_USER = "otherUserId"
 private const val KEY_MATCH = "match"
-private const val KEY_RELATED_USERS = "related_users"
+private const val KEY_RELATED_USERS = "relatedUsers\$app_debug" //relatedUsers\$app_debug
 
 private var firestoreDatabase = FirebaseFirestore.getInstance()
 private val HARDCODED_ID = "f74UBon50PVoKI4Z3aKanKDrAOs1"
@@ -78,8 +79,12 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
 
-                    val user = task.result?.toObject(User::class.java)!!
-                    val list = user.relatedUsers!!
+                    val map = (task.result?.data as HashMap<*, *>)
+                    val listStr = (map[KEY_RELATED_USERS] as Iterable<*>).toList()
+
+//                    val user = task.result?.toObject(User::class.java)!!
+//                    val list = user.relatedUsers!!
+                    val list = parseListOfUsers(listStr)
                     onSuccess(list)
 
                 } else {
@@ -95,7 +100,6 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
         onFailure: (String) -> Unit
     ) {
         val errorMessage = "Server error while getting profile."
-
         firestoreDatabase.collection(KEY_DB_USER).document(userId)
             .get()
             .addOnCompleteListener { task ->
@@ -112,7 +116,7 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
     }
 
     override fun loadAllProfiles(
-        onSuccess: (MutableList<User>) -> Unit,
+        onSuccess: (List<User>) -> Unit,
         onFailure: (String) -> Unit
     ) {
         val errorMessage = "Server error while getting all users."
@@ -136,7 +140,6 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
             }
     }
 
-    //TODO: change structure of relation table to make operations more efficient.
     override fun loadFreshProfile(
         id: String,
         onSuccess: (User) -> Unit,
@@ -149,13 +152,17 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
         this.loadRelatedUsers(id, { listRelated ->
             this.loadAllProfiles({ listAll ->
 
+                var loaded = false
                 for (user in listAll) {
                     if (id != user.id && !listRelated.contains(user.id)) {
+                        loaded = true
                         onSuccess(user)
                         break
                     }
                 }
-                onFailure(errorMessage)
+
+                if (!loaded)
+                    onFailure(errorMessage)
             }, {
                 onFailure(it)
             })
@@ -195,20 +202,24 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
             { onSuccess() },
             { onFailure(errorMessage) }
         )
+        Log.d("Protocol", protocol.toString())
 
-        if (relation.isLiked)
-            protocol.like()
-        else
-            protocol.dislike()
+        //TODO: Comment line below, when protocol would be ready.
+        onSuccess()
+
+        //TODO: Uncomment line below, when protocol would be ready.
+//        if (relation.isLiked)
+//            protocol.like()
+//        else
+//            protocol.dislike()
     }
 
     override fun loadMatchingProfiles(
         id: String,
-        onSuccess: (MutableList<User>) -> Unit,
+        onSuccess: (User) -> Unit,
         onFailure: (String) -> Unit
     ) {
         val errorMessage = "Server error while getting matched first profiles."
-
         firestoreDatabase.collection(KEY_DB_RELATION).whereArrayContains(KEY_DB_USERS, id).get()
             .addOnCompleteListener { task ->
                 val profiles: MutableList<User> = ArrayList()
@@ -221,16 +232,15 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
                         else
                             relation.users.first()
 
-                        this.loadProfile(newId, {
-                            //TODO: onResult(it). Change signature of method: onResult: (User) -> Unit and run for each found matched profile.
-                            // It would work for loading matched profiles to recyclerView, but it won't work for comparing related profiles with all profiles in method doesRelationExist()
-                            profiles.add(it)
+                        this.loadProfile(newId, {user ->
+                            profiles.add(user)
+                            onSuccess(user)
                         }, {
                             onFailure(it)
                             Log.w("ERROR", it)
                         })
                     }
-                    onSuccess(profiles)
+//                    onSuccess(profiles)
                 } else {
                     onFailure(errorMessage)
                     Log.w("ERROR", errorMessage, task.exception)
