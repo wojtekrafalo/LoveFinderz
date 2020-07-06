@@ -7,25 +7,22 @@ import com.example.lovefinderz.ui.profile.ProfileView
 import javax.inject.Inject
 
 class ProfilePresenterImpl @Inject constructor(
-  private val authenticationInterface: FirebaseAuthenticationInterface,
-  private val databaseInterface: FirebaseDatabaseInterface
+    private val authenticationInterface: FirebaseAuthenticationInterface,
+    private val databaseInterface: FirebaseDatabaseInterface
 ) : ProfilePresenter {
 
-  private lateinit var view: ProfileView
+    private lateinit var view: ProfileView
 
-  override fun setView(view: ProfileView) {
-    this.view = view
-  }
-
-  override fun getProfile() {
-    databaseInterface.getProfile(authenticationInterface.getUserId()) {
-        //TODO: Id is unnecessary.
-//      val userId = authenticationInterface.getUserId()
-
-      view.showUsername(it.username)
-      view.showEmail(it.email)
-      //TODO: Delete below, but syntax can be reused.
-//      it.favoriteUsers?.count { it.id == userId }?.let { it1 -> view.showNumberOfJokes(it1) }
+    override fun setView(view: ProfileView) {
+        this.view = view
     }
-  }
+
+    override fun getProfile() {
+        databaseInterface.loadProfile(authenticationInterface.getUserId(), {
+            view.showUsername(it.username)
+            view.showEmail(it.email)
+        }, {
+            view.showErrorMessage(it)
+        })
+    }
 }

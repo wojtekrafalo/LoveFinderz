@@ -1,10 +1,13 @@
 package com.example.lovefinderz.model
 
-import com.example.lovefinderz.common.*
-
 
 data class UserRelation(
-    var idLiking: String = "",
-    var idLiked: String = "",
+    var thisUserId: String = "",
+    var otherUserId: String = "",
     var isLiked: Boolean = false
+)
+
+data class UserRelationEntry(
+    var entryId: String = "",
+    var users: List<String> = listOf()
 )

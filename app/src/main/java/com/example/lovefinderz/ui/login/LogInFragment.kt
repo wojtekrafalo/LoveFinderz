@@ -1,4 +1,4 @@
-package com.example.lovefinderz
+package com.example.lovefinderz.ui.login
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,15 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.example.lovefinderz.R
 import com.example.lovefinderz.common.onClick
 import com.example.lovefinderz.common.onTextChanged
-import com.example.lovefinderz.ui.login.LoginView
+import com.example.lovefinderz.common.showInfoDialog
+import com.example.lovefinderz.loginPresenter
 import kotlinx.android.synthetic.main.fragment_log_in.*
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class LogInFragment : Fragment(), LoginView {
+class LogInFragment : Fragment(), LogInView {
 
     private val presenter by lazy { loginPresenter() }
 
@@ -57,11 +59,6 @@ class LogInFragment : Fragment(), LoginView {
     }
 
     override fun showLoginError() {
-        log_in_label_error.error = getString(R.string.log_in_error)
-        log_in_label_error.text = getString(R.string.log_in_error)
-
-        //TODO: Check if line below works.
-//        showGeneralError(MainActivity())
-
+        showInfoDialog(this.requireContext(), getString(R.string.show_email_and_password_error))
     }
 }

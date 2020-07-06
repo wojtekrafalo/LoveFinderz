@@ -5,11 +5,13 @@ import com.example.lovefinderz.ui.browser.ProfileBrowserView
 
 interface ProfileBrowserPresenter : BasePresenter<ProfileBrowserView> {
 
-  fun onRateTapped(isLiked:Boolean)
+  fun onRelationTapped(isLiked:Boolean)
 
   fun loadFreshProfile()
 
-  fun showProfileLoadingError()
+  fun showProfileLoadingError(errorMessage: String)
+
   fun sendProfileDataToView(user: User)
-  fun showProfileRatingError()
+
+  fun showRelationError(errorMessage: String)
 }

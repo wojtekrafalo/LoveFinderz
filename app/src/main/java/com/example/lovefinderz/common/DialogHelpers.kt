@@ -7,10 +7,15 @@ import android.widget.EditText
 import com.example.lovefinderz.R
 
 
-fun showGeneralError(from: Context, message: String) {
+fun showInfoDialog(from: Context, message: String, title: String = "") {
+    val newTitle =
+        if (title == "")
+            from.getString(R.string.error_message)
+        else title
+
     AlertDialog.Builder(from)
-        .setTitle(message)
-        .setMessage(from.getString(R.string.error_message))
+        .setTitle(newTitle)
+        .setMessage(message)
         .setPositiveButton(from.getString(R.string.general_positive_button)) { dialog, _ -> dialog.dismiss() }
         .show()
 }

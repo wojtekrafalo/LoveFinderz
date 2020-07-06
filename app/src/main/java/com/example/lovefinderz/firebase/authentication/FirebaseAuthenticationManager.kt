@@ -6,16 +6,15 @@ import javax.inject.Inject
 
 
 class FirebaseAuthenticationManager @Inject constructor(private val authentication: FirebaseAuth) : FirebaseAuthenticationInterface {
-
+    //TODO: Add onFailure.
     override fun login(email: String, password: String, onResult: (Boolean) -> Unit) {
         authentication.signInWithEmailAndPassword(email, password).addOnCompleteListener {
             onResult(it.isComplete && it.isSuccessful)
         }
     }
-
+    //TODO: Add onFailure, e.x. when email exists.
     override fun register(email: String, password: String, userName: String, onResult: (Boolean) -> Unit) {
         authentication.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-            println("BreakPoint")
             if (it.isComplete && it.isSuccessful) {
                 authentication.currentUser?.updateProfile(
                     UserProfileChangeRequest
@@ -40,7 +39,6 @@ class FirebaseAuthenticationManager @Inject constructor(private val authenticati
     }
 
     override fun transitIfLogged(transition: () -> Unit) {
-        //TODO: Check if user is logged in.
         val userId = this.getUserId()
         if(userId != "")
             transition()

@@ -1,11 +1,15 @@
-package com.example.lovefinderz
+package com.example.lovefinderz.ui.main
 
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import com.example.lovefinderz.ui.main.MainView
+import com.example.lovefinderz.*
+import com.example.lovefinderz.ui.matched.MatchedProfileFragment
+import com.example.lovefinderz.ui.browser.ProfileBrowserFragment
+import com.example.lovefinderz.ui.profile.ProfileFragment
+import com.example.lovefinderz.ui.welcome.WelcomeFragment
 
 
 class MainActivity : AppCompatActivity(), MainView {
@@ -64,31 +68,40 @@ class MainActivity : AppCompatActivity(), MainView {
 
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.nav_host_fragment, WelcomeFragment())
+            .replace(
+                R.id.nav_host_fragment,
+                WelcomeFragment()
+            )
             .commit()
     }
 
     override fun onHomeSuccess() {
-        //TODO:Add loading of profile.
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.nav_host_fragment, ProfileFragment())
+            .replace(
+                R.id.nav_host_fragment,
+                ProfileFragment()
+            )
             .commit()
     }
 
     override fun onBrowseSuccess() {
-        //TODO:Add loading of profiles.
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.nav_host_fragment, ProfileBrowserFragment())
+            .replace(
+                R.id.nav_host_fragment,
+                ProfileBrowserFragment()
+            )
             .commit()
     }
 
     override fun onMatchesTapped() {
-        //TODO:Add loading of matches.
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.nav_host_fragment, MatchedProfileFragment())
+            .replace(
+                R.id.nav_host_fragment,
+                MatchedProfileFragment()
+            )
             .commit()
     }
 }

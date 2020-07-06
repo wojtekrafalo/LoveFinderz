@@ -7,13 +7,9 @@
 
     <fragment
         android:id="@+id/WelcomeFragment"
-        android:name="com.example.lovefinderz.WelcomeFragment"
+        android:name="com.example.lovefinderz.ui.welcome.WelcomeFragment"
         android:label="@string/welcome_fragment_label"
         tools:layout="@layout/fragment_welcome">
-
-        <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
 
         <action
             android:id="@+id/action_WelcomeFragment_to_LogInFragment"
@@ -30,20 +26,8 @@
 
 
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.lovefinderz.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/WelcomeFragment" />
-    </fragment>
-
-
-    <fragment
         android:id="@+id/LogInFragment"
-        android:name="com.example.lovefinderz.LogInFragment"
+        android:name="com.example.lovefinderz.ui.login.LogInFragment"
         android:label="@string/log_in"
         tools:layout="@layout/fragment_log_in">
 
@@ -59,7 +43,7 @@
 
     <fragment
         android:id="@+id/RegisterFragment"
-        android:name="com.example.lovefinderz.RegisterFragment"
+        android:name="com.example.lovefinderz.ui.register.RegisterFragment"
         android:label="@string/register"
         tools:layout="@layout/fragment_register">
 
@@ -74,7 +58,7 @@
 
     <fragment
         android:id="@+id/ProfileFragment"
-        android:name="com.example.lovefinderz.ProfileFragment"
+        android:name="com.example.lovefinderz.ui.profile.ProfileFragment"
         android:label="@string/profile"
         tools:layout="@layout/fragment_profile">
 
@@ -86,14 +70,14 @@
 
     <fragment
         android:id="@+id/ProfileBrowserFragment"
-        android:name="com.example.lovefinderz.ProfileBrowserFragment"
+        android:name="com.example.lovefinderz.ui.browser.ProfileBrowserFragment"
         android:label="@string/profile_browser"
         tools:layout="@layout/fragment_profile_browser">
     </fragment>
 
     <fragment
         android:id="@+id/MatchedProfileFragment"
-        android:name="com.example.lovefinderz.MatchedProfileFragment"
+        android:name="com.example.lovefinderz.ui.matched.MatchedProfileFragment"
         android:label="@string/matched_profiles"
         tools:layout="@layout/fragment_matched_profile">
 

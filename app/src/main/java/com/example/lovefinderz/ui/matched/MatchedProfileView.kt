@@ -4,5 +4,7 @@ import com.example.lovefinderz.model.User
 
 interface MatchedProfileView {
 
-  fun loadMatchedProfiles (profiles: MutableList<User>)
+  fun loadMatchedProfile (profile: User)
+
+  fun showErrorMessage(message: String)
 }

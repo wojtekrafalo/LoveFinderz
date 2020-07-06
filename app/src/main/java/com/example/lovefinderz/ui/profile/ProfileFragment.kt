@@ -1,4 +1,4 @@
-package com.example.lovefinderz
+package com.example.lovefinderz.ui.profile
 
 import android.os.Bundle
 import android.util.Log
@@ -6,9 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
+import com.example.lovefinderz.R
 import com.example.lovefinderz.common.onClick
-import com.example.lovefinderz.ui.profile.ProfileView
+import com.example.lovefinderz.common.showInfoDialog
+import com.example.lovefinderz.profilePresenter
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 /**
@@ -55,8 +56,11 @@ class ProfileFragment : Fragment(), ProfileView {
         profile_email_text.text = email
     }
 
-    override fun openWelcome() {
-        //TODO: Add 'Log Out' button on ProfileFragment or simply delete this function.
-        findNavController().navigate(R.id.action_ProfileFragment_to_WelcomeFragment)
+    override fun showAge(dateOfBirth: String) {
+        //TODO: add field to show age.
+    }
+
+    override fun showErrorMessage(message: String) {
+        showInfoDialog(this.requireContext(), message)
     }
 }

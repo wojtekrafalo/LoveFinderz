@@ -7,40 +7,38 @@ import com.example.lovefinderz.ui.main.MainView
 import javax.inject.Inject
 
 class MainViewPresenterImpl @Inject constructor(
-  private val database: FirebaseDatabaseInterface,
-  private val authentication: FirebaseAuthenticationInterface
+    private val database: FirebaseDatabaseInterface,
+    private val authentication: FirebaseAuthenticationInterface
 ) : MainViewPresenter {
 
-  private lateinit var view: MainView
+    private lateinit var view: MainView
 
-  override fun setView(view: MainView) {
-    this.view = view
-  }
-
-  override fun onLogOutTapped() {
-    authentication.logOut {
-      view.onLogOutSuccess()
+    override fun setView(view: MainView) {
+        this.view = view
     }
-  }
 
-  override fun onHomeTapped() {
-    authentication.transitIfLogged{
-      view.onHomeSuccess()
+    override fun onLogOutTapped() {
+        authentication.logOut {
+            view.onLogOutSuccess()
+        }
     }
-  }
 
-  override fun onBrowseTapped() {
-    //TODO: load BrowseProfileFragment
-    authentication.transitIfLogged{
-      view.onBrowseSuccess()
+    override fun onHomeTapped() {
+        authentication.transitIfLogged {
+            view.onHomeSuccess()
+        }
     }
-  }
 
-  override fun onMatchesTapped() {
-    //TODO: Add new window to show matches of specific user.
-    authentication.transitIfLogged{
-      view.onMatchesTapped()
+    override fun onBrowseTapped() {
+        authentication.transitIfLogged {
+            view.onBrowseSuccess()
+        }
     }
-  }
+
+    override fun onMatchesTapped() {
+        authentication.transitIfLogged {
+            view.onMatchesTapped()
+        }
+    }
 }
 

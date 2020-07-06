@@ -1,8 +1,8 @@
 package com.example.lovefinderz.presentation
 
-import com.example.lovefinderz.ui.login.LoginView
+import com.example.lovefinderz.ui.login.LogInView
 
-interface LoginPresenter : BasePresenter<LoginView> {
+interface LoginPresenter : BasePresenter<LogInView> {
 
   fun onLoginTapped()
 

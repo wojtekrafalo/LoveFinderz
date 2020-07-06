@@ -1,6 +1,6 @@
 package com.example.lovefinderz.ui.login
 
-interface LoginView {
+interface LogInView {
 
   fun showPasswordError()
 
