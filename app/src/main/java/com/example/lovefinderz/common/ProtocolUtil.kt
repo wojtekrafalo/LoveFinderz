@@ -1,5 +1,6 @@
 package com.example.lovefinderz.common
 
+import android.content.Context
 import android.util.Log
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
@@ -74,7 +75,7 @@ fun firstPartOfProtocol(protocolDataRef: DocumentReference, likes: Boolean, this
 }
 
 
-fun secondPartOfProtocol(protocolDataRef: DocumentReference, g: Int, n: Int, x: Int, likes: Boolean, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit): OneTimeWorkRequest {
+fun secondPartOfProtocol(protocolDataRef: DocumentReference, g: Int, n: Int, x: Int, likes: Boolean, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit, context: Context){
     val p = getRandomPositiveVal()
 
     val y = if (likes){
@@ -82,32 +83,30 @@ fun secondPartOfProtocol(protocolDataRef: DocumentReference, g: Int, n: Int, x: 
     }else{
         g.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).times(x.toBigInteger()).rem(n.toBigInteger())
     }
-    val messagingKey = hash(x.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).toString())
 
-
+    val workerData = createInputDataProtocolWorker(thisUserId, otherUserId, p, likes, "", "", "", x)
     protocolDataRef.update("y", y.toInt()).addOnSuccessListener {
+        WorkManager.getInstance(context).enqueue(OneTimeWorkRequestBuilder<ProtocolWorker>().setInputData(workerData).build())
         onSuccess()
     }.addOnFailureListener{
         onFailure()
     }
-    val workerData = createInputDataProtocolWorker(thisUserId, otherUserId, p, likes, "", "", "", x.toInt())
-    return OneTimeWorkRequestBuilder<ProtocolWorker>().setInputData(workerData).build()
+
 }
 
-fun thirdPartOfProtocol(protocolDataRef: DocumentReference, p:Int, n:Int, y:Int, x:Int, likes: Boolean, othersKey0:String, othersKey1: String, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit): OneTimeWorkRequest {
+fun thirdPartOfProtocol(protocolDataRef: DocumentReference, p:Int, n:Int, y:Int, x:Int, othersKey0:String, othersKey1: String, onFailure: () -> Unit, onSuccess: () -> Unit){
     val k0 = hash(y.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).toInt().toString())
     val k1 = hash(y.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).divide(x.toBigInteger()).rem(n.toBigInteger()).toInt().toString())
-    val c0 = encrypt(k0, othersKey0)
-    val c1 = encrypt(k1, othersKey1)
+    val c0 = encrypt(k0, "0000000000$othersKey0")
+    val c1 = encrypt(k1, "0000000000$othersKey1")
     protocolDataRef.update(mapOf("encryptedSecondUserChoiceKey0" to c0, "encryptedSecondUserChoiceKey1" to c1)).addOnSuccessListener { onSuccess() }.addOnFailureListener{onFailure()}
-    val workerData = createInputDataProtocolWorker(thisUserId, otherUserId, p, likes, "", othersKey0, othersKey1, x)
-    return OneTimeWorkRequestBuilder<ProtocolWorker>().setInputData(workerData).build()
+
 }
 
 fun fourthPartOfProtocol(myKey:String, othersKey:String, data: ProtocolData, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit){
     for(gc in data.gc){
         val out = decrypt(othersKey, decrypt(myKey, gc))
-        if (out=="1" || out == "0"){
+        if (out=="1"){
             val relation = UserRelationEntry(listOf(thisUserId, otherUserId))
             FirebaseFirestore.getInstance().collection("relation").add(relation).addOnSuccessListener { onSuccess() }.addOnFailureListener{onFailure()}
         }
