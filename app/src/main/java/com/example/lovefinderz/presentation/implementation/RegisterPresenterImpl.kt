@@ -28,34 +28,18 @@ class RegisterPresenterImpl @Inject constructor(
 
     override fun onUsernameChanged(username: String) {
         userData.username = username
-
-//    if (!isUsernameValid(username)) {
-//      view.showUsernameError()
-//    }
     }
 
     override fun onEmailChanged(email: String) {
         userData.email = email
-
-//    if (!isEmailValid(email)) {
-//      view.showEmailError()
-//    }
     }
 
     override fun onPasswordChanged(password: String) {
         userData.password = password
-
-//    if (!isPasswordValid(password)) {
-//      view.showPasswordError()
-//    }
     }
 
     override fun onRepeatPasswordChanged(repeatPassword: String) {
         userData.repeatPassword = repeatPassword
-
-//    if (!arePasswordsSame(userData.password, repeatPassword)) {
-//      view.showPasswordMatchingError()
-//    }
     }
 
     override fun onRegisterTapped() {

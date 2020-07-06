@@ -8,6 +8,5 @@ data class UserRelation(
 )
 
 data class UserRelationEntry(
-    var entryId: String = "",
     var users: List<String> = listOf()
 )

@@ -54,7 +54,6 @@ class LogInFragment : Fragment(), LogInView {
     }
 
     override fun onLoginSuccess() {
-        println("BreakPoint")
         findNavController().navigate(R.id.action_LogInFragment_to_ProfileFragment)
     }
 
