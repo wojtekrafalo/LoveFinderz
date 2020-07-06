@@ -15,20 +15,9 @@ import kotlin.collections.ArrayList
 private const val KEY_DB_USER = "user"
 private const val KEY_DB_USERS = "users"
 private const val KEY_DB_RELATION = "relation"
-private const val KEY_EMAIL = "email"
-private const val KEY_USERNAME = "username"
-private const val KEY_PHOTO = "photo"
-private const val KEY_BIRTH = "dateOfBirth"
-private const val KEY_ID = "id"
-private const val KEY_THIS_USER = "thisUserId"
-private const val KEY_OTHER_USER = "otherUserId"
-private const val KEY_MATCH = "match"
-private const val KEY_RELATED_USERS = "relatedUsers\$app_debug" //relatedUsers\$app_debug
+private const val KEY_RELATED_USERS = "relatedUsers\$app_debug"
 
-private var firestoreDatabase = FirebaseFirestore.getInstance()
-private val HARDCODED_ID = "f74UBon50PVoKI4Z3aKanKDrAOs1"
-private val HARDCODED_USERNAME = "bartke"
-private val HARDCODED_EMAIL = "bartke@bartke.bartke"
+private var fireStoreDatabase = FirebaseFirestore.getInstance()
 
 class FirebaseDatabaseManager @Inject constructor(private val database: FirebaseDatabase) :
     FirebaseDatabaseInterface {
@@ -39,7 +28,7 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
         onSuccess: () -> Unit,
         onFailure: () -> Unit
     ) {
-        firestoreDatabase.collection(KEY_DB_USER).document(id).set(user)
+        fireStoreDatabase.collection(KEY_DB_USER).document(id).set(user)
             .addOnSuccessListener {
                 onSuccess()
                 Log.d("SUCCESS", "User added!!!")
@@ -56,7 +45,7 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
         onFailure: (String) -> Unit
     ) {
         val errorMessage = "Server error while rating."
-        firestoreDatabase.collection(KEY_DB_USER)
+        fireStoreDatabase.collection(KEY_DB_USER)
             .document(relation.thisUserId)
             .update(KEY_RELATED_USERS, FieldValue.arrayUnion(relation.otherUserId))
             .addOnSuccessListener {
@@ -73,7 +62,7 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
         onFailure: (String) -> Unit
     ) {
         val errorMessage = "Server error while rating."
-        firestoreDatabase.collection(KEY_DB_USER)
+        fireStoreDatabase.collection(KEY_DB_USER)
             .document(thisUserId)
             .get()
             .addOnCompleteListener { task ->
@@ -82,8 +71,6 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
                     val map = (task.result?.data as HashMap<*, *>)
                     val listStr = (map[KEY_RELATED_USERS] as Iterable<*>).toList()
 
-//                    val user = task.result?.toObject(User::class.java)!!
-//                    val list = user.relatedUsers!!
                     val list = parseListOfUsers(listStr)
                     onSuccess(list)
 
@@ -100,7 +87,7 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
         onFailure: (String) -> Unit
     ) {
         val errorMessage = "Server error while getting profile."
-        firestoreDatabase.collection(KEY_DB_USER).document(userId)
+        fireStoreDatabase.collection(KEY_DB_USER).document(userId)
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -121,7 +108,7 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
     ) {
         val errorMessage = "Server error while getting all users."
 
-        firestoreDatabase.collection(KEY_DB_USER)
+        fireStoreDatabase.collection(KEY_DB_USER)
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -146,8 +133,6 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
         onFailure: (String) -> Unit
     ) {
         val errorMessage = "Server error. No profile found."
-//        val user = UserResponse(HARDCODED_ID, HARDCODED_USERNAME, HARDCODED_EMAIL)
-//        onResult(user)
 
         this.loadRelatedUsers(id, { listRelated ->
             this.loadAllProfiles({ listAll ->
@@ -220,7 +205,7 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
         onFailure: (String) -> Unit
     ) {
         val errorMessage = "Server error while getting matched first profiles."
-        firestoreDatabase.collection(KEY_DB_RELATION).whereArrayContains(KEY_DB_USERS, id).get()
+        fireStoreDatabase.collection(KEY_DB_RELATION).whereArrayContains(KEY_DB_USERS, id).get()
             .addOnCompleteListener { task ->
                 val profiles: MutableList<User> = ArrayList()
                 if (task.isSuccessful) {
@@ -240,7 +225,6 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
                             Log.w("ERROR", it)
                         })
                     }
-//                    onSuccess(profiles)
                 } else {
                     onFailure(errorMessage)
                     Log.w("ERROR", errorMessage, task.exception)

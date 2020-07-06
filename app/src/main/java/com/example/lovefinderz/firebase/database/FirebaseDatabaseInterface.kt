@@ -13,13 +13,6 @@ interface FirebaseDatabaseInterface {
         onFailure: () -> Unit
     )
 
-//    fun updateRelatedUserList(
-//        thisUserId: String,
-//        otherUserId: String,
-//        onSuccess: () -> Unit,
-//        onFailure: (String) -> Unit
-//    )
-
     fun loadProfile(
         userId: String,
         onSuccess: (User) -> Unit,

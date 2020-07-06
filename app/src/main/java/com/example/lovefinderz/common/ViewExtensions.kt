@@ -6,7 +6,6 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import androidx.viewpager.widget.ViewPager
-//import android.support.v4.view.ViewPager
 
 inline fun View.onClick(crossinline onClickHandler: () -> Unit) {
     setOnClickListener { onClickHandler() }

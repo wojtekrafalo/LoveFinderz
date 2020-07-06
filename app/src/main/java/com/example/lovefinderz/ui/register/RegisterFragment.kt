@@ -25,7 +25,6 @@ class RegisterFragment : Fragment(), RegisterView {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         presenter.setView(this)
         return inflater.inflate(R.layout.fragment_register, container, false)
     }
@@ -39,7 +38,6 @@ class RegisterFragment : Fragment(), RegisterView {
         register_edit_text_password_repeat.onTextChanged { presenter.onRepeatPasswordChanged(it) }
 
         register_button_cancel.onClick { findNavController().navigate(R.id.action_RegisterFragment_to_WelcomeFragment) }
-
         register_button_confirm.onClick {
             Log.d("SUCCESS", "Register confirmed")
             presenter.onRegisterTapped()
@@ -47,7 +45,6 @@ class RegisterFragment : Fragment(), RegisterView {
     }
 
     override fun onSignUpSuccess() {
-        println("BreakPoint")
         findNavController().navigate(R.id.action_RegisterFragment_to_WelcomeFragment)
         val message = getString(R.string.register_success)
         this.showMessageDialog(message)
@@ -78,7 +75,6 @@ class RegisterFragment : Fragment(), RegisterView {
         register_label_error.text = getString(R.string.repeat_password_error)
     }
 
-    //TODO: Make a modal pop up window with information instead of snackbar.
     private fun showMessageDialog(message:String) {
         showInfoDialog(this.requireContext(), message)
     }

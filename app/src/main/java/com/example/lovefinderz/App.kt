@@ -4,8 +4,6 @@ import android.app.Application
 import com.example.lovefinderz.di.AppComponent
 import com.example.lovefinderz.di.DaggerAppComponent
 
-//import com.raywenderlich.android.whysoserious.di.DaggerAppComponent
-
 class App : Application() {
 
   companion object {
