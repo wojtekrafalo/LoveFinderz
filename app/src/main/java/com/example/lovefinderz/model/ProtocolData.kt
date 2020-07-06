@@ -1,6 +1,7 @@
 package com.example.lovefinderz.model
 
 data class ProtocolData(
+    var initializatorId: String = "",
     var users: List<String> = listOf("", ""),
     var gc: List<String> = listOf("", "", "", ""),
     var g: Int? = null,

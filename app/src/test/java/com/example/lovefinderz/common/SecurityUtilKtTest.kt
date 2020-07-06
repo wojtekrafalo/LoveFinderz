@@ -1,6 +1,7 @@
 package com.example.lovefinderz.common
 
 import org.junit.Test
+import java.security.SecureRandom
 
 
 import java.util.*
@@ -38,6 +39,17 @@ class SecurityUtilKtTest {
         val encrypted = encrypt(key, toEncrypt)
         assert(encrypted != toEncrypt)
         assert(toEncrypt == decrypt(key, encrypted))
+    }
+
+    @Test
+    fun advancedEncryptAndDecryptTest(){
+        for (i in 1..10000){
+            val key = generateCryptographicKey()
+            val toEncrypt = hash(SecureRandom().nextLong().toString())
+            val encrypted = encrypt(key, toEncrypt)
+            assert(encrypted != toEncrypt)
+            assert(toEncrypt == decrypt(key, encrypted))
+        }
     }
 
 }
