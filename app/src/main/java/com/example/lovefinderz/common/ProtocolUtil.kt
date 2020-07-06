@@ -1,8 +1,14 @@
 package com.example.lovefinderz.common
 
 import android.util.Log
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.example.lovefinderz.model.ProtocolData
 import com.example.lovefinderz.model.UserRelationEntry
+import com.example.lovefinderz.protocol.ProtocolWorker
+import com.example.lovefinderz.protocol.ProtocolWorker.Companion.createInputDataProtocolWorker
 import com.example.lovefinderz.protocol.UserSympathy
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,7 +36,7 @@ fun generateId(thisUserId: String, otherUserId: String): String {
     else otherUserId + thisUserId
 }
 
-fun firstPartOfProtocol(protocolDataRef: DocumentReference, likes: Boolean, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit) {
+fun firstPartOfProtocol(protocolDataRef: DocumentReference, likes: Boolean, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit): OneTimeWorkRequest {
 
     //Keys
     val a0 = generateCryptographicKey()
@@ -62,12 +68,13 @@ fun firstPartOfProtocol(protocolDataRef: DocumentReference, likes: Boolean, this
     }.addOnFailureListener{
         onFailure()
     }
-    //TODO?? save data
-    //TODO run listener
+
+    val workerData = createInputDataProtocolWorker(thisUserId, otherUserId, p, likes, choiceKey, b0, b1, x.toInt())
+    return OneTimeWorkRequestBuilder<ProtocolWorker>().setInputData(workerData).build()
 }
 
 
-fun secondPartOfProtocol(protocolDataRef: DocumentReference, g: Int, n: Int, x: Int, likes: Boolean, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit) {
+fun secondPartOfProtocol(protocolDataRef: DocumentReference, g: Int, n: Int, x: Int, likes: Boolean, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit): OneTimeWorkRequest {
     val p = getRandomPositiveVal()
 
     val y = if (likes){
@@ -83,18 +90,18 @@ fun secondPartOfProtocol(protocolDataRef: DocumentReference, g: Int, n: Int, x: 
     }.addOnFailureListener{
         onFailure()
     }
-    //TODO?? save data
-    //TODO run listener
+    val workerData = createInputDataProtocolWorker(thisUserId, otherUserId, p, likes, "", "", "", x.toInt())
+    return OneTimeWorkRequestBuilder<ProtocolWorker>().setInputData(workerData).build()
 }
 
-fun thirdPartOfProtocol(protocolDataRef: DocumentReference, p:Int, n:Int, y:Int, x:Int, othersKey0:String, othersKey1: String, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit){
+fun thirdPartOfProtocol(protocolDataRef: DocumentReference, p:Int, n:Int, y:Int, x:Int, likes: Boolean, othersKey0:String, othersKey1: String, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit): OneTimeWorkRequest {
     val k0 = hash(y.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).toInt().toString())
     val k1 = hash(y.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).divide(x.toBigInteger()).rem(n.toBigInteger()).toInt().toString())
     val c0 = encrypt(k0, othersKey0)
     val c1 = encrypt(k1, othersKey1)
     protocolDataRef.update(mapOf("encryptedSecondUserChoiceKey0" to c0, "encryptedSecondUserChoiceKey1" to c1)).addOnSuccessListener { onSuccess() }.addOnFailureListener{onFailure()}
-    //TODO?? save data
-    //TODO run listener
+    val workerData = createInputDataProtocolWorker(thisUserId, otherUserId, p, likes, "", othersKey0, othersKey1, x)
+    return OneTimeWorkRequestBuilder<ProtocolWorker>().setInputData(workerData).build()
 }
 
 fun fourthPartOfProtocol(myKey:String, othersKey:String, data: ProtocolData, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit){
