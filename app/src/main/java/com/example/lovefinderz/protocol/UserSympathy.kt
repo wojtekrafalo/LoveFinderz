@@ -1,27 +1,26 @@
 package com.example.lovefinderz.protocol
 
 import android.content.Context
-import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.util.Log
+
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.example.lovefinderz.common.*
 
 import com.example.lovefinderz.model.ProtocolData
 import com.google.firebase.firestore.DocumentReference
+
 import com.google.firebase.firestore.FirebaseFirestore
-import java.security.InvalidParameterException
+
 import java.security.SecureRandom
 
 
-class UserSympathy(private val thisUserId: String, private val otherUserId: String, private val onSuccess: () -> Unit, private val onFailure: () -> Unit) {
-    private val recordId = generateId()
+class UserSympathy(private val thisUserId: String, private val otherUserId: String, private val onSuccess: () -> Unit = {}, private val onFailure: () -> Unit = {}, private val context:Context) {
+    private val recordId = generateId(thisUserId, otherUserId)
     private var p: Int = 0
     private val db = FirebaseFirestore.getInstance()
-    private var myChoiceKey:String? = getKeyOrNull(recordId, Companion.MY_CHOICE_KEY)
-
-    private fun getKeyOrNull(id: String, key: String): String? {
-        //TODO
-        return null
-    }
+    private var myChoiceKey:String? = null
 
     private lateinit var othersChoiceKey:String
     private lateinit var messagingKey:String
@@ -40,14 +39,7 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
     private fun confess(likes: Boolean) {
         this.likes = likes
         initializeProtocol()
-        //TODO run listener
-        //runListener()
     }
-
-    private fun runListener() {
-        TODO("Not yet implemented")
-    }
-
 
     private fun initializeProtocol() {
         val protocolDataRef = db.collection("protocol_data").document(recordId)
@@ -91,13 +83,11 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
         val n = getN()
 
         p = getRandomPositiveVal()
-        saveKey(MY_P, p.toString())
 
         val x = g.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger())
 
         val choiceKey = if (likes) a1 else a0
         myChoiceKey = choiceKey
-        saveKey(MY_CHOICE_KEY, choiceKey)
 
         val gc = mutableListOf(gc1, gc2, gc3, gc4)
         gc.shuffle(SecureRandom())
@@ -110,13 +100,10 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
             Log.d(Companion.TAG, "firstPartOfProtocol: Data not added")
             onFailure()
         }
+        //TODO?? save data
+        //TODO run listener
     }
 
-    private fun saveKey(key: String, value: String) {
-        //TODO use existing id
-        //TODO implement that
-        return
-    }
 
     private fun secondPartOfProtocol(
         protocolDataRef: DocumentReference,
@@ -125,14 +112,14 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
         x: Int
     ) {
         p = getRandomPositiveVal()
-        saveKey(MY_P, p.toString())
+
         val y = if (likes){
             g.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger())
         }else{
             g.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).times(x.toBigInteger()).rem(n.toBigInteger())
         }
         messagingKey = hash(x.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).toString())
-        saveKey(MESSAGING_KEY, messagingKey)
+
 
         protocolDataRef.update("y", y.toInt()).addOnSuccessListener {
             Log.d(Companion.TAG, "secondPartOfProtocol: Data added")
@@ -141,37 +128,55 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
             Log.d(Companion.TAG, "secondPartOfProtocol: Data added")
             onFailure()
         }
+        //TODO?? save data
+        //TODO run listener
     }
 
-    /**
-     * Returns true if thisUserId is before otherUserId in order and false if otherUserId is before thisUserId
-     */
-    private fun orderOnUserIds(): Boolean {
-        var i = 0
-        while (true) {
-            if (thisUserId.length <= i && otherUserId.length <= i) throw InvalidParameterException("Ids can not be equal!")
-            if (thisUserId.length <= i) return true
-            if (otherUserId.length <= i) return false
-            if (thisUserId[i].toInt() < otherUserId[i].toInt()) return true
-            if (thisUserId[i].toInt() > otherUserId[i].toInt()) return false
-            i++
-        }
+    private fun saveKey(key: String, value: String) {
+        //TODO?? use existing id
+        //TODO?? implement that
+        return
     }
 
-    private fun generateId(): String {
-        return if (orderOnUserIds()) thisUserId + otherUserId
-        else otherUserId + thisUserId
+    private fun getKeyOrNull(key: String): String? {
+        //TODO?? user recordId
+        //TODO?? implement that
+        return null
     }
 
     companion object {
         private const val TAG = "UserSympathy"
-        private const val MY_CHOICE_KEY = "myChoiceKey"
-        private const val MY_P = "p"
-        private const val MESSAGING_KEY = "messagingKey"
 
     }
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*    private fun createInputDataForUri(): Data {
+        val builder = Data.Builder()
+        imageUri?.let {
+            builder.putString(KEY_IMAGE_URI, imageUri.toString())
+        }
+        return builder.build()
+
+                val protocolBackgroundWork: WorkRequest = OneTimeWorkRequestBuilder<ProtocolWorker>().setInputData().build()
+        WorkManager.getInstance(context).enqueue(protocolBackgroundWork)
+    }*/
+
+
 
 /*
     Sprawdź, czy firebase jest już info dla waszej relacji, jeżeli nie ma:
