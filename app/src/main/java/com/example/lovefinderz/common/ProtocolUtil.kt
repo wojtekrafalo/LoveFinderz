@@ -37,7 +37,7 @@ fun generateId(thisUserId: String, otherUserId: String): String {
     else otherUserId + thisUserId
 }
 
-fun firstPartOfProtocol(protocolDataRef: DocumentReference, likes: Boolean, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit): OneTimeWorkRequest {
+fun firstPartOfProtocol(protocolDataRef: DocumentReference, likes: Boolean, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit, context: Context){
 
     //Keys
     val a0 = generateCryptographicKey()
@@ -64,14 +64,15 @@ fun firstPartOfProtocol(protocolDataRef: DocumentReference, likes: Boolean, this
     gc.shuffle(SecureRandom())
     val data = ProtocolData(thisUserId, listOf(thisUserId, otherUserId), gc, g, n, x.toInt(), choiceKey)
 
+    val workerData = createInputDataProtocolWorker(thisUserId, otherUserId, p, likes, choiceKey, b0, b1, x.toInt())
     protocolDataRef.set(data).addOnSuccessListener {
+        WorkManager.getInstance(context).enqueue(OneTimeWorkRequestBuilder<ProtocolWorker>().setInputData(workerData).build())
         onSuccess()
     }.addOnFailureListener{
         onFailure()
     }
 
-    val workerData = createInputDataProtocolWorker(thisUserId, otherUserId, p, likes, choiceKey, b0, b1, x.toInt())
-    return OneTimeWorkRequestBuilder<ProtocolWorker>().setInputData(workerData).build()
+
 }
 
 

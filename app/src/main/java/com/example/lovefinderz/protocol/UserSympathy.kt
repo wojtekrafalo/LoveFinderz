@@ -38,7 +38,7 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
                 Log.d(Companion.TAG, "initializeProtocol: ProtocolData Record found")
                 val oldData = it.toObject(ProtocolData::class.java)!!
                 if(oldData.initializerId != thisUserId){
-                    secondPartOfProtocol(protocolDataRef, oldData.g!!, oldData.n!!, oldData.x!!, likes, thisUserId, otherUserId, onFailure, onSuccess)
+                    secondPartOfProtocol(protocolDataRef, oldData.g, oldData.n, oldData.x!!, likes, thisUserId, otherUserId, onFailure, onSuccess, context)
                 }
                 else{
                     onFailure()
@@ -46,7 +46,7 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
 
             } else {
                 Log.d(Companion.TAG, "initializeProtocol: ProtocolData Record not found")
-                firstPartOfProtocol(protocolDataRef, likes, thisUserId, otherUserId, onFailure, onSuccess)
+                firstPartOfProtocol(protocolDataRef, likes, thisUserId, otherUserId, onFailure, onSuccess, context)
             }
         }.addOnFailureListener {
             Log.d(Companion.TAG, "initializeProtocol: Error while updating protocol data: " + it.message)
@@ -73,7 +73,7 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
 
 
 
-
+//TODO clean that
 
 /*    private fun createInputDataForUri(): Data {
         val builder = Data.Builder()
