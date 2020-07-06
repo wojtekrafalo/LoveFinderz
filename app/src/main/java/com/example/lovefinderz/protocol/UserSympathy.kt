@@ -1,17 +1,33 @@
 package com.example.lovefinderz.protocol
 
+import android.content.Context
+import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.util.Log
 import com.example.lovefinderz.common.*
 
-import com.example.lovefinderz.firebase.database.FirebaseDatabaseManager_Factory
-
 import com.example.lovefinderz.model.ProtocolData
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import java.security.InvalidParameterException
 import java.security.SecureRandom
 
 
 class UserSympathy(private val thisUserId: String, private val otherUserId: String, private val onSuccess: () -> Unit, private val onFailure: () -> Unit) {
+    private val recordId = generateId()
+    private var p: Int = 0
+    private val db = FirebaseFirestore.getInstance()
+    private var myChoiceKey:String? = getKeyOrNull(recordId, Companion.MY_CHOICE_KEY)
+
+    private fun getKeyOrNull(id: String, key: String): String? {
+        //TODO
+        return null
+    }
+
+    private lateinit var othersChoiceKey:String
+    private lateinit var messagingKey:String
+    private var likes = false
+    private lateinit var garbledCircuit:List<String>
+
     fun like() {
         confess(true)
     }
@@ -20,9 +36,45 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
         confess(false)
     }
 
-    private val db = FirebaseFirestore.getInstance()
 
     private fun confess(likes: Boolean) {
+        this.likes = likes
+        initializeProtocol()
+        //TODO run listener
+        //runListener()
+    }
+
+    private fun runListener() {
+        TODO("Not yet implemented")
+    }
+
+
+    private fun initializeProtocol() {
+        val protocolDataRef = db.collection("protocol_data").document(recordId)
+
+        protocolDataRef.get().addOnSuccessListener {
+            if (it.exists()) {
+                Log.d(Companion.TAG, "initializeProtocol: ProtocolData Record found")
+                val oldData = it.toObject(ProtocolData::class.java)!!
+                if(myChoiceKey != null  || oldData.firstUserChoiceKey != myChoiceKey){
+                    secondPartOfProtocol(protocolDataRef, oldData.g!!, oldData.n!!, oldData.x!!)
+                }
+                else{
+                    onFailure()
+                }
+
+            } else {
+                Log.d(Companion.TAG, "initializeProtocol: ProtocolData Record not found")
+                firstPartOfProtocol(protocolDataRef)
+            }
+        }.addOnFailureListener {
+            Log.d(Companion.TAG, "initializeProtocol: Error while updating protocol data: " + it.message)
+            onFailure()
+        }
+    }
+
+    private fun firstPartOfProtocol(protocolDataRef: DocumentReference) {
+
         //Keys
         val a0 = generateCryptographicKey()
         val a1 = generateCryptographicKey()
@@ -38,56 +90,56 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
         val g = getG()
         val n = getN()
 
-        val p = SecureRandom().nextInt()
-        //TODO make power
-        var x = g.toBigDecimal()
-        x = x.rem(n.toBigDecimal())
+        p = getRandomPositiveVal()
+        saveKey(MY_P, p.toString())
+
+        val x = g.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger())
 
         val choiceKey = if (likes) a1 else a0
+        myChoiceKey = choiceKey
+        saveKey(MY_CHOICE_KEY, choiceKey)
 
         val gc = mutableListOf(gc1, gc2, gc3, gc4)
         gc.shuffle(SecureRandom())
         val data = ProtocolData(listOf(thisUserId, otherUserId), gc, g, n, x.toInt(), choiceKey)
-        insertOrUpdateProtocolData(data)
 
-        runListener()
-
+        protocolDataRef.set(data).addOnSuccessListener {
+            Log.d(Companion.TAG, "firstPartOfProtocol: Data added")
+            onSuccess()
+        }.addOnFailureListener{
+            Log.d(Companion.TAG, "firstPartOfProtocol: Data not added")
+            onFailure()
+        }
     }
 
-    private fun runListener() {
-
+    private fun saveKey(key: String, value: String) {
+        //TODO use existing id
+        //TODO implement that
+        return
     }
 
-    private fun insertOrUpdateProtocolData(data: ProtocolData) {
-        doIfDataExists(data, ::updateProtocolData, ::addProtocolData)
-    }
-
-    private fun addProtocolData(data: ProtocolData) {
-
-    }
-
-    private fun updateProtocolData(data: ProtocolData) {
-
-    }
-
-    private fun doIfDataExists(
-        data: ProtocolData,
-        onDataExists: (data: ProtocolData) -> Unit,
-        onDataNotExists: (data: ProtocolData) -> Unit
+    private fun secondPartOfProtocol(
+        protocolDataRef: DocumentReference,
+        g: Int,
+        n: Int,
+        x: Int
     ) {
-        val id = generateId()
-        val protocolDataRef = db.collection("protocol_data").document(id)
-        protocolDataRef.get().addOnSuccessListener {
-            if (it.exists()) {
-                Log.d(Companion.TAG, "insertOrUpdateProtocolData: empty" + it.toString())
-            } else {
-                Log.d(Companion.TAG, "insertOrUpdateProtocolData: not empty" + it.toString())
-            }
-        }.addOnFailureListener {
-            Log.d(
-                Companion.TAG,
-                "insertOrUpdateProtocolData: Error while updating protocol data: " + it.message
-            )
+        p = getRandomPositiveVal()
+        saveKey(MY_P, p.toString())
+        val y = if (likes){
+            g.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger())
+        }else{
+            g.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).times(x.toBigInteger()).rem(n.toBigInteger())
+        }
+        messagingKey = hash(x.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).toString())
+        saveKey(MESSAGING_KEY, messagingKey)
+
+        protocolDataRef.update("y", y.toInt()).addOnSuccessListener {
+            Log.d(Companion.TAG, "secondPartOfProtocol: Data added")
+            onSuccess()
+        }.addOnFailureListener{
+            Log.d(Companion.TAG, "secondPartOfProtocol: Data added")
+            onFailure()
         }
     }
 
@@ -97,9 +149,9 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
     private fun orderOnUserIds(): Boolean {
         var i = 0
         while (true) {
-            if (thisUserId.length >= i && otherUserId.length >= i) throw InvalidParameterException("Ids can not be equal!")
-            if (thisUserId.length >= i) return true
-            if (otherUserId.length >= i) return false
+            if (thisUserId.length <= i && otherUserId.length <= i) throw InvalidParameterException("Ids can not be equal!")
+            if (thisUserId.length <= i) return true
+            if (otherUserId.length <= i) return false
             if (thisUserId[i].toInt() < otherUserId[i].toInt()) return true
             if (thisUserId[i].toInt() > otherUserId[i].toInt()) return false
             i++
@@ -113,10 +165,13 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
 
     companion object {
         private const val TAG = "UserSympathy"
+        private const val MY_CHOICE_KEY = "myChoiceKey"
+        private const val MY_P = "p"
+        private const val MESSAGING_KEY = "messagingKey"
+
     }
 
 }
-
 
 /*
     Sprawdź, czy firebase jest już info dla waszej relacji, jeżeli nie ma:
