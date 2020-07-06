@@ -2,8 +2,10 @@ package com.example.lovefinderz.common
 
 import android.util.Log
 import com.example.lovefinderz.model.ProtocolData
+import com.example.lovefinderz.model.UserRelationEntry
 import com.example.lovefinderz.protocol.UserSympathy
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 import java.security.InvalidParameterException
 import java.security.SecureRandom
 
@@ -83,4 +85,25 @@ fun secondPartOfProtocol(protocolDataRef: DocumentReference, g: Int, n: Int, x: 
     }
     //TODO?? save data
     //TODO run listener
+}
+
+fun thirdPartOfProtocol(protocolDataRef: DocumentReference, p:Int, n:Int, y:Int, x:Int, othersKey0:String, othersKey1: String, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit){
+    val k0 = hash(y.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).toInt().toString())
+    val k1 = hash(y.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).divide(x.toBigInteger()).rem(n.toBigInteger()).toInt().toString())
+    val c0 = encrypt(k0, othersKey0)
+    val c1 = encrypt(k1, othersKey1)
+    protocolDataRef.update(mapOf("encryptedSecondUserChoiceKey0" to c0, "encryptedSecondUserChoiceKey1" to c1)).addOnSuccessListener { onSuccess() }.addOnFailureListener{onFailure()}
+    //TODO?? save data
+    //TODO run listener
+}
+
+fun fourthPartOfProtocol(myKey:String, othersKey:String, data: ProtocolData, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit){
+    for(gc in data.gc){
+        val out = decrypt(othersKey, decrypt(myKey, gc))
+        if (out=="1" || out == "0"){
+            val relation = UserRelationEntry("", listOf(thisUserId, otherUserId))
+            FirebaseFirestore.getInstance().collection("relation").add(relation).addOnSuccessListener { onSuccess() }.addOnFailureListener{onFailure()}
+        }
+    }
+    onFailure()
 }

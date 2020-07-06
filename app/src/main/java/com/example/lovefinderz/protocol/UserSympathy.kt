@@ -2,19 +2,12 @@ package com.example.lovefinderz.protocol
 
 import android.content.Context
 import android.util.Log
-import androidx.work.Data
 
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.WorkRequest
 import com.example.lovefinderz.common.*
 
 import com.example.lovefinderz.model.ProtocolData
-import com.google.firebase.firestore.DocumentReference
 
 import com.google.firebase.firestore.FirebaseFirestore
-
-import java.security.SecureRandom
 
 
 class UserSympathy(private val thisUserId: String, private val otherUserId: String, private val onSuccess: () -> Unit = {}, private val onFailure: () -> Unit = {}, private val context:Context) {
@@ -44,7 +37,7 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
             if (it.exists()) {
                 Log.d(Companion.TAG, "initializeProtocol: ProtocolData Record found")
                 val oldData = it.toObject(ProtocolData::class.java)!!
-                if(oldData.initializatorId != thisUserId){
+                if(oldData.initializerId != thisUserId){
                     secondPartOfProtocol(protocolDataRef, oldData.g!!, oldData.n!!, oldData.x!!, likes, thisUserId, otherUserId, onFailure, onSuccess)
                 }
                 else{
@@ -59,20 +52,6 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
             Log.d(Companion.TAG, "initializeProtocol: Error while updating protocol data: " + it.message)
             onFailure()
         }
-    }
-
-
-
-    private fun saveKey(key: String, value: String) {
-        //TODO?? use existing id
-        //TODO?? implement that
-        return
-    }
-
-    private fun getKeyOrNull(key: String): String? {
-        //TODO?? user recordId
-        //TODO?? implement that
-        return null
     }
 
     companion object {

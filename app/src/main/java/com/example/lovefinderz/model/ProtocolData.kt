@@ -1,7 +1,7 @@
 package com.example.lovefinderz.model
 
 data class ProtocolData(
-    var initializatorId: String = "",
+    var initializerId: String = "",
     var users: List<String> = listOf("", ""),
     var gc: List<String> = listOf("", "", "", ""),
     var g: Int? = null,
@@ -9,6 +9,6 @@ data class ProtocolData(
     var x: Int? = null,
     var firstUserChoiceKey: String = "",
     var y: Int? = null,
-    var secondUserChoiceKey1: String = "",
-    var secondUserChoiceKey2: String = ""
+    var encryptedSecondUserChoiceKey0: String = "",
+    var encryptedSecondUserChoiceKey1: String = ""
 )
