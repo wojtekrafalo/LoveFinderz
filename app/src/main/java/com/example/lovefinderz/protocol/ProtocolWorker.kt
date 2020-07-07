@@ -30,11 +30,11 @@ class ProtocolWorker(private val context: Context, workerParams: WorkerParameter
                 } else {
                     documentSnapshot?.let {
                         val data = documentSnapshot.toObject(ProtocolData::class.java)!!
-                        if (data.initializerId!= thisUserId && data.firstUserChoiceKey != inputData.getString(MY_CHOICE_KEY)){
+                        if (data.initializerId!= thisUserId && data.firstUserChoiceKey != inputData.getString(MY_CHOICE_KEY) && inputData.getInt(MESSAGING_KEY_BASE, -1) != data.y){
                             secondPartOfProtocol(docRef, data.g, data.n, data.x!!, inputData.getBoolean(LIKES, false), thisUserId, otherUserId, {completer.set(Result.retry())}, {completer.set(Result.success())}, context)
 
                             return@addSnapshotListener
-                        } else if (data.initializerId == thisUserId && data.y != null) {
+                        } else if (data.initializerId == thisUserId && data.y != null && data.encryptedSecondUserChoiceKey1=="" && data.encryptedSecondUserChoiceKey0=="" ) {
                             thirdPartOfProtocol(docRef, inputData.getInt(P, 1), data.n, data.y!!, data.x!!, inputData.getString(OTHERS_KEY_0)!!,inputData.getString(OTHERS_KEY_1)!!, {completer.set(Result.retry())}, {completer.set(Result.success())})
 
                             return@addSnapshotListener
