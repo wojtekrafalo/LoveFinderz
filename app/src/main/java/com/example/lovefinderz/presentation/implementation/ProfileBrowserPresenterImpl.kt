@@ -1,5 +1,6 @@
 package com.example.lovefinderz.presentation.implementation
 
+import android.content.Context
 import com.example.lovefinderz.firebase.authentication.FirebaseAuthenticationInterface
 import com.example.lovefinderz.firebase.database.FirebaseDatabaseInterface
 import com.example.lovefinderz.model.User
@@ -20,11 +21,12 @@ class ProfileBrowserPresenterImpl @Inject constructor(
         this.view = view
     }
 
-    override fun onRelationTapped(isLiked: Boolean) {
+    override fun onRelationTapped(context: Context, isLiked: Boolean) {
 
         val relation = UserRelation(authenticationInterface.getUserId(), loadedUser.id, isLiked)
 
         databaseInterface.storeRelation(
+            context,
             relation,
             { this.loadFreshProfile() },
             { this.showRelationError(it) }

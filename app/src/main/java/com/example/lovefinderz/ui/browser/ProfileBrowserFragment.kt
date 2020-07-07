@@ -10,7 +10,6 @@ import com.example.lovefinderz.R
 import com.example.lovefinderz.common.onClick
 import com.example.lovefinderz.common.showInfoDialog
 import com.example.lovefinderz.profileBrowserPresenter
-import com.example.lovefinderz.ui.browser.ProfileBrowserView
 import kotlinx.android.synthetic.main.fragment_profile_browser.*
 
 /**
@@ -33,11 +32,11 @@ class ProfileBrowserFragment : Fragment(), ProfileBrowserView {
 
         presenter.loadFreshProfile()
         profile_browser_like_button.onClick {
-            presenter.onRelationTapped(true)
+            presenter.onRelationTapped(this.requireContext(), true)
         }
 
         profile_browser_dislike_button.onClick {
-            presenter.onRelationTapped(false)
+            presenter.onRelationTapped(this.requireContext(), false)
         }
     }
 

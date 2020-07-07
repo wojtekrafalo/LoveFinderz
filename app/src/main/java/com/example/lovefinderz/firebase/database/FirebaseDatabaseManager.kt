@@ -1,6 +1,7 @@
 package com.example.lovefinderz.firebase.database
 
 import android.util.Log
+import android.content.Context
 import com.example.lovefinderz.common.parseListOfUsers
 import com.example.lovefinderz.model.User
 import com.example.lovefinderz.model.UserRelation
@@ -157,25 +158,29 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
     }
 
     override fun storeRelation(
+        context: Context,
         relation: UserRelation,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
-        sendProtocol(relation, {
-            this.updateRelatedUserList(relation, {
-                onSuccess()
-            }, {
+        sendProtocol(
+            context,
+            relation, {
+                this.updateRelatedUserList(relation, {
+                    onSuccess()
+                }, {
+                    onFailure(it)
+                })
+            },
+            {
                 onFailure(it)
             })
-        }, {
-            onFailure(it)
-        })
-
     }
 
 
     //TODO: Use onSuccess and onFailure.
     private fun sendProtocol(
+        context: Context,
         relation: UserRelation,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
@@ -185,18 +190,15 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
             relation.thisUserId,
             relation.otherUserId,
             { onSuccess() },
-            { onFailure(errorMessage) }
+            { onFailure(errorMessage) },
+            context
         )
         Log.d("Protocol", protocol.toString())
 
-        //TODO: Comment line below, when protocol would be ready.
-        onSuccess()
-
-        //TODO: Uncomment line below, when protocol would be ready.
-//        if (relation.isLiked)
-//            protocol.like()
-//        else
-//            protocol.dislike()
+        if (relation.isLiked)
+            protocol.like()
+        else
+            protocol.dislike()
     }
 
     override fun loadMatchingProfiles(
@@ -217,7 +219,7 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
                         else
                             relation.users.first()
 
-                        this.loadProfile(newId, {user ->
+                        this.loadProfile(newId, { user ->
                             profiles.add(user)
                             onSuccess(user)
                         }, {

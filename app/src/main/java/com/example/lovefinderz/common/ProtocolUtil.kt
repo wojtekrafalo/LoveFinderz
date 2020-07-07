@@ -20,7 +20,7 @@ import java.security.SecureRandom
 /**
  * Returns true if thisUserId is before otherUserId in order and false if otherUserId is before thisUserId
  */
-fun orderOnUserIds(thisUserId:String, otherUserId: String): Boolean {
+fun orderOnUserIds(thisUserId: String, otherUserId: String): Boolean {
     var i = 0
     while (true) {
         if (thisUserId.length <= i && otherUserId.length <= i) throw InvalidParameterException("Ids can not be equal!")
@@ -37,7 +37,15 @@ fun generateId(thisUserId: String, otherUserId: String): String {
     else otherUserId + thisUserId
 }
 
-fun firstPartOfProtocol(protocolDataRef: DocumentReference, likes: Boolean, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit, context: Context){
+fun firstPartOfProtocol(
+    protocolDataRef: DocumentReference,
+    likes: Boolean,
+    thisUserId: String,
+    otherUserId: String,
+    onFailure: () -> Unit,
+    onSuccess: () -> Unit,
+    context: Context
+) {
 
     //Keys
     val a0 = generateCryptographicKey()
@@ -62,13 +70,24 @@ fun firstPartOfProtocol(protocolDataRef: DocumentReference, likes: Boolean, this
 
     val gc = mutableListOf(gc1, gc2, gc3, gc4)
     gc.shuffle(SecureRandom())
-    val data = ProtocolData(thisUserId, listOf(thisUserId, otherUserId), gc, g, n, x.toInt(), choiceKey)
+    val data =
+        ProtocolData(thisUserId, listOf(thisUserId, otherUserId), gc, g, n, x.toInt(), choiceKey)
 
-    val workerData = createInputDataProtocolWorker(thisUserId, otherUserId, p, likes, choiceKey, b0, b1, x.toInt())
+    val workerData = createInputDataProtocolWorker(
+        thisUserId,
+        otherUserId,
+        p,
+        likes,
+        choiceKey,
+        b0,
+        b1,
+        x.toInt()
+    )
     protocolDataRef.set(data).addOnSuccessListener {
-        WorkManager.getInstance(context).enqueue(OneTimeWorkRequestBuilder<ProtocolWorker>().setInputData(workerData).build())
+        WorkManager.getInstance(context)
+            .enqueue(OneTimeWorkRequestBuilder<ProtocolWorker>().setInputData(workerData).build())
         onSuccess()
-    }.addOnFailureListener{
+    }.addOnFailureListener {
         onFailure()
     }
 
@@ -76,40 +95,80 @@ fun firstPartOfProtocol(protocolDataRef: DocumentReference, likes: Boolean, this
 }
 
 
-fun secondPartOfProtocol(protocolDataRef: DocumentReference, g: Int, n: Int, x: Int, likes: Boolean, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit, context: Context){
+fun secondPartOfProtocol(
+    protocolDataRef: DocumentReference,
+    g: Int,
+    n: Int,
+    x: Int,
+    likes: Boolean,
+    thisUserId: String,
+    otherUserId: String,
+    onFailure: () -> Unit,
+    onSuccess: () -> Unit,
+    context: Context
+) {
     val p = getRandomPositiveVal()
 
-    val y = if (likes){
+    val y = if (likes) {
         g.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger())
-    }else{
-        g.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).times(x.toBigInteger()).rem(n.toBigInteger())
+    } else {
+        g.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).times(x.toBigInteger())
+            .rem(n.toBigInteger())
     }
 
     val workerData = createInputDataProtocolWorker(thisUserId, otherUserId, p, likes, "", "", "", x)
     protocolDataRef.update("y", y.toInt()).addOnSuccessListener {
-        WorkManager.getInstance(context).enqueue(OneTimeWorkRequestBuilder<ProtocolWorker>().setInputData(workerData).build())
+        WorkManager.getInstance(context)
+            .enqueue(OneTimeWorkRequestBuilder<ProtocolWorker>().setInputData(workerData).build())
         onSuccess()
-    }.addOnFailureListener{
+    }.addOnFailureListener {
         onFailure()
     }
 
 }
 
-fun thirdPartOfProtocol(protocolDataRef: DocumentReference, p:Int, n:Int, y:Int, x:Int, othersKey0:String, othersKey1: String, onFailure: () -> Unit, onSuccess: () -> Unit){
+fun thirdPartOfProtocol(
+    protocolDataRef: DocumentReference,
+    p: Int,
+    n: Int,
+    y: Int,
+    x: Int,
+    othersKey0: String,
+    othersKey1: String,
+    onFailure: () -> Unit,
+    onSuccess: () -> Unit
+) {
     val k0 = hash(y.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).toInt().toString())
-    val k1 = hash(y.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).divide(x.toBigInteger()).rem(n.toBigInteger()).toInt().toString())
+    val k1 = hash(
+        y.toBigInteger().modPow(p.toBigInteger(), n.toBigInteger()).divide(x.toBigInteger())
+            .rem(n.toBigInteger()).toInt().toString()
+    )
     val c0 = encrypt(k0, "0000000000$othersKey0")
     val c1 = encrypt(k1, "0000000000$othersKey1")
-    protocolDataRef.update(mapOf("encryptedSecondUserChoiceKey0" to c0, "encryptedSecondUserChoiceKey1" to c1)).addOnSuccessListener { onSuccess() }.addOnFailureListener{onFailure()}
+    protocolDataRef.update(
+        mapOf(
+            "encryptedSecondUserChoiceKey0" to c0,
+            "encryptedSecondUserChoiceKey1" to c1
+        )
+    ).addOnSuccessListener { onSuccess() }.addOnFailureListener { onFailure() }
 
 }
 
-fun fourthPartOfProtocol(myKey:String, othersKey:String, data: ProtocolData, thisUserId: String, otherUserId: String, onFailure: () -> Unit, onSuccess: () -> Unit){
-    for(gc in data.gc){
+fun fourthPartOfProtocol(
+    myKey: String,
+    othersKey: String,
+    data: ProtocolData,
+    thisUserId: String,
+    otherUserId: String,
+    onFailure: () -> Unit,
+    onSuccess: () -> Unit
+) {
+    for (gc in data.gc) {
         val out = decrypt(othersKey, decrypt(myKey, gc))
-        if (out=="1"){
+        if (out == "1") {
             val relation = UserRelationEntry(listOf(thisUserId, otherUserId))
-            FirebaseFirestore.getInstance().collection("relation").add(relation).addOnSuccessListener { onSuccess() }.addOnFailureListener{onFailure()}
+            FirebaseFirestore.getInstance().collection("relation").add(relation)
+                .addOnSuccessListener { onSuccess() }.addOnFailureListener { onFailure() }
         }
     }
     onFailure()

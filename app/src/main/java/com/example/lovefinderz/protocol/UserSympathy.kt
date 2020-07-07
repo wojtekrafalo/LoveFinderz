@@ -10,7 +10,13 @@ import com.example.lovefinderz.model.ProtocolData
 import com.google.firebase.firestore.FirebaseFirestore
 
 
-class UserSympathy(private val thisUserId: String, private val otherUserId: String, private val onSuccess: () -> Unit = {}, private val onFailure: () -> Unit = {}, private val context:Context) {
+class UserSympathy(
+    private val thisUserId: String,
+    private val otherUserId: String,
+    private val onSuccess: () -> Unit = {},
+    private val onFailure: () -> Unit = {},
+    private val context: Context
+) {
     private val recordId = generateId(thisUserId, otherUserId)
     private val db = FirebaseFirestore.getInstance()
 
@@ -37,19 +43,40 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
             if (it.exists()) {
                 Log.d(Companion.TAG, "initializeProtocol: ProtocolData Record found")
                 val oldData = it.toObject(ProtocolData::class.java)!!
-                if(oldData.initializerId != thisUserId){
-                    secondPartOfProtocol(protocolDataRef, oldData.g, oldData.n, oldData.x!!, likes, thisUserId, otherUserId, onFailure, onSuccess, context)
-                }
-                else{
+                if (oldData.initializerId != thisUserId) {
+                    secondPartOfProtocol(
+                        protocolDataRef,
+                        oldData.g,
+                        oldData.n,
+                        oldData.x!!,
+                        likes,
+                        thisUserId,
+                        otherUserId,
+                        onFailure,
+                        onSuccess,
+                        context
+                    )
+                } else {
                     onFailure()
                 }
 
             } else {
                 Log.d(Companion.TAG, "initializeProtocol: ProtocolData Record not found")
-                firstPartOfProtocol(protocolDataRef, likes, thisUserId, otherUserId, onFailure, onSuccess, context)
+                firstPartOfProtocol(
+                    protocolDataRef,
+                    likes,
+                    thisUserId,
+                    otherUserId,
+                    onFailure,
+                    onSuccess,
+                    context
+                )
             }
         }.addOnFailureListener {
-            Log.d(Companion.TAG, "initializeProtocol: Error while updating protocol data: " + it.message)
+            Log.d(
+                Companion.TAG,
+                "initializeProtocol: Error while updating protocol data: " + it.message
+            )
             onFailure()
         }
     }
@@ -59,18 +86,6 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //TODO clean that
@@ -85,7 +100,6 @@ class UserSympathy(private val thisUserId: String, private val otherUserId: Stri
                 val protocolBackgroundWork: WorkRequest = OneTimeWorkRequestBuilder<ProtocolWorker>().setInputData().build()
         WorkManager.getInstance(context).enqueue(protocolBackgroundWork)
     }*/
-
 
 
 /*

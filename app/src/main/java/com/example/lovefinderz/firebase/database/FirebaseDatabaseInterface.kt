@@ -1,5 +1,6 @@
 package com.example.lovefinderz.firebase.database
 
+import android.content.Context
 import com.example.lovefinderz.model.User
 import com.example.lovefinderz.model.UserRelation
 
@@ -31,6 +32,7 @@ interface FirebaseDatabaseInterface {
     )
 
     fun storeRelation(
+        context: Context,
         relation: UserRelation,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
