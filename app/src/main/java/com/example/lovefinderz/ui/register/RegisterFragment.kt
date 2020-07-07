@@ -76,6 +76,6 @@ class RegisterFragment : Fragment(), RegisterView {
     }
 
     private fun showMessageDialog(message:String) {
-        showInfoDialog(this.requireContext(), message)
+        showInfoDialog(this.requireContext(), message, "  ")
     }
 }
