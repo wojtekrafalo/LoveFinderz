@@ -195,10 +195,14 @@ class FirebaseDatabaseManager @Inject constructor(private val database: Firebase
         )
         Log.d("Protocol", protocol.toString())
 
-        if (relation.isLiked)
-            protocol.like()
-        else
-            protocol.dislike()
+        //TODO: Delete below, when protocol will work:
+        onSuccess()
+
+        //TODO: Uncomment below, when protocol will work:
+//        if (relation.isLiked)
+//            protocol.like()
+//        else
+//            protocol.dislike()
     }
 
     override fun loadMatchingProfiles(
