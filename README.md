@@ -1,20 +1,17 @@
 # LoveFinderz
 An application for single looking for love.
 
-<hr />
 # Abstract
 A project of LoveFinderrz was designed as a Tinder-like application. Its main purposes is to:
 - allow creating profiles and storing them in cloud database.
 - allow rating other profiles.
 - provide a protocol of sending rates and searching for matches between users.\\[2em]
 
-<hr />
 # Used tools
 There was two main technologies used to develop this application. First one is the Firebase. It is used for back end functionality. Server uses two main services of Firebase: Authentication service used to store user credentials, Cloud Firestore used to store user profiles, their rates and temporal data used in protocol processing.
 
 Second technology is the Android Studio - an environment used to develop front end functionality of application.
 
-<hr />
 # Business layers
 
 
@@ -42,7 +39,7 @@ There is a possibility to show all matched users with specific one.
 ## Menu
 All views for users can be switched using menu button in top right corner of window.
 
-<hr />
+
 
 # Implementation
 Implementation of an application consists of four main parts:
@@ -88,7 +85,6 @@ Table *relation* in other way consists of following fields:
 Storing and loading data from server database is implemented in `FirebaseDatabaseManager` class and provides REST operations. ([See more](https://firebase.google.com/docs/firestore)).
 
 
-<hr />
 # Protocol
 
 ## Introduction
